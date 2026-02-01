@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>অ্যাডমিন প্যানেল - DPI Boi Baz</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --primary: #006747; --danger: #d9534f; --info: #3498db; --white: #ffffff; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; margin: 0; padding: 15px; padding-bottom: 100px; }
+        
+        .admin-header { background: var(--primary); color: white; padding: 12px; text-align: center; border-radius: 10px; font-size: 20px; font-weight: bold; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); max-width: 600px; margin: 0 auto; }
+        
+        /* লগইন সেকশন */
+        .pass-wrapper { position: relative; width: 100%; margin-bottom: 15px; }
+        input[type="password"], input[type="text"] { width: 100%; padding: 10px 15px; border: 1px solid #ddd; border-radius: 25px; box-sizing: border-box; outline: none; font-size: 15px; }
+        .toggle-eye { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #888; }
+
+        /* বাটন স্টাইল */
+        .btn { padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; transition: 0.3s; display: inline-flex; align-items: center; gap: 5px; }
+        .login-btn { background: var(--primary); color: white; width: 100%; justify-content: center; padding: 12px; border-radius: 25px; }
+        .delete-btn { background: #fff5f5; color: var(--danger); border: 1px solid var(--danger); }
+        .delete-btn:hover { background: var(--danger); color: white; }
+        
+        /* ইউজার কার্ড ও অ্যানিমেশন */
+        .user-container { background: white; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left: 5px solid var(--primary); overflow: hidden; transition: all 0.3s ease; }
+        .user-main-info { padding: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .user-info h4 { margin: 0; font-size: 16px; color: #222; }
+        .user-info small { color: #666; font-size: 13px; }
+
+        /* ডিটেইলস সেকশন অ্যানিমেশন */
+        .details-section { 
+            max-height: 0; padding: 0 15px; background: #fafafa; 
+            transition: max-height 0.4s ease-out, padding 0.3s ease; 
+            border-top: 0px solid transparent; overflow: hidden;
+        }
+        .user-container.active .details-section { max-height: 500px; padding: 15px; border-top: 1px dashed #ccc; }
+
+        .book-row { 
+            background: white; padding: 8px 12px; border: 1px solid #eee; 
+            border-radius: 6px; margin-top: 5px; display: flex; 
+            justify-content: space-between; align-items: center; font-size: 13px;
+        }
+
+        /* ফ্লোটিং বাটনসমূহ */
+        .all-remove-btn { background: #000; color: white; position: fixed; bottom: 20px; right: 20px; z-index: 100; border-radius: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .admin1-link { position: fixed; bottom: 20px; left: 20px; background: var(--primary); color: white; padding: 8px 15px; border-radius: 20px; text-decoration: none; font-size: 12px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 100; }
+
+        .footer-credit { text-align: center; margin-top: 30px; font-size: 12px; color: #888; }
+        
+        #statusModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-box { background: white; padding: 25px; border-radius: 15px; text-align: center; width: 280px; }
+        .ok-btn { margin-top: 15px; padding: 8px 25px; background: var(--primary); color: white; border: none; border-radius: 20px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="admin-header">অ্যাডমিন কন্ট্রোল প্যানেল</div>
+
+    <div id="loginSection" class="card" style="max-width: 350px;">
+        <div class="pass-wrapper">
+            <input type="password" id="adminPass" placeholder="অ্যাডমিন পাসওয়ার্ড" onkeypress="handleEnter(event)">
+            <span class="toggle-eye" onclick="togglePass()">
+                <i class="fa-solid fa-eye" id="eyeIcon"></i>
+            </span>
+        </div>
+        <button class="btn login-btn" onclick="checkAdmin()">প্রবেশ করুন</button>
+    </div>
+
+    <div id="adminContent" style="display:none; max-width: 600px; margin: 0 auto;">
+        <div id="userList"></div>
+        <center><a href="index.html" class="btn" style="background:#7f8c8d; color:white; margin-top:20px;">হোম পেজে ফিরে যান</a></center>
+    </div>
+
+    <a href="admin1.html" id="admin1Btn" class="admin1-link" style="display:none;"> Extra Edit</a>
+    <button id="allRemoveBtn" class="btn all-remove-btn" style="display:none;" onclick="deleteAllData()">
+        <i class="fa-solid fa-trash"></i> All Remove
+    </button>
+
+    <div class="footer-credit">এই ওয়েবসাইটটি A.H.SUJON দ্বারা তৈরি।</div>
+
+    <div id="statusModal">
+        <div class="modal-box" id="modalBox">
+            <div id="modalIcon" style="font-size: 40px; margin-bottom: 10px;"></div>
+            <div id="modalText" style="font-weight: bold; color: #333;"></div>
+            <button class="ok-btn" onclick="closeModal()">ঠিক আছে</button>
+        </div>
+    </div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, deleteDoc, doc, query, where, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // আপনার নতুন ডাটাবেজ কনফিগারেশন
+    const firebaseConfig = {
+        apiKey: "AIzaSyD_7v6rBHjVLHVK5OGiJpkgBzAuaJO8vn0",
+        authDomain: "boi-baz-v2.firebaseapp.com",
+        projectId: "boi-baz-v2",
+        storageBucket: "boi-baz-v2.firebasestorage.app",
+        messagingSenderId: "573343324145",
+        appId: "1:573343324145:web:42899dd75501af36985650",
+        measurementId: "G-75YZQFQ0TT"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Enter Key Handler
+    window.handleEnter = (event) => {
+        if (event.key === "Enter") {
+            checkAdmin();
+        }
+    };
+
+    window.togglePass = () => {
+        const p = document.getElementById('adminPass');
+        const icon = document.getElementById('eyeIcon');
+        if (p.type === "password") {
+            p.type = "text";
+            icon.classList.replace("fa-eye", "fa-eye-slash");
+        } else {
+            p.type = "password";
+            icon.classList.replace("fa-eye-slash", "fa-eye");
+        }
+    };
+
+    window.checkAdmin = () => {
+        if(document.getElementById('adminPass').value === "19378240") { 
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('adminContent').style.display = 'block';
+            document.getElementById('allRemoveBtn').style.display = 'block';
+            document.getElementById('admin1Btn').style.display = 'block';
+            loadUsers();
+        } else { showModal("❌", "ভুল পাসওয়ার্ড!"); }
+    };
+
+    async function loadUsers() {
+        const listDiv = document.getElementById('userList');
+        listDiv.innerHTML = "<p style='text-align:center;'>লোড হচ্ছে...</p>";
+        const snap = await getDocs(collection(db, "users")); 
+        listDiv.innerHTML = "";
+        
+        snap.forEach((uDoc) => {
+            const user = uDoc.data();
+            const id = uDoc.id;
+            listDiv.innerHTML += `
+                <div class="user-container" id="u-cont-${id}">
+                    <div class="user-main-info" onclick="toggleAccordion('${id}', '${user.phone}')">
+                        <div class="user-info">
+                            <h4>${user.name}</h4>
+                            <small>📞 ${user.phone}</small>
+                        </div>
+                        <button class="btn delete-btn" onclick="event.stopPropagation(); deleteUser('${id}', '${user.phone}')">রিমুভ</button>
+                    </div>
+                    <div class="details-section" id="details-${id}">
+                        <p style="font-size:13px; margin:0 0 10px;"><strong>পাসওয়ার্ড (pass):</strong> ${user.pass}</p>
+                        <div id="user-books-${id}">বই লোড হচ্ছে...</div>
+                    </div>
+                </div>`;
+        });
+    }
+
+    // Accordion Logic with Animation
+    window.toggleAccordion = async (id, phone) => {
+        const container = document.getElementById(`u-cont-${id}`);
+        const isActive = container.classList.contains('active');
+        
+        if(!isActive) {
+            container.classList.add('active');
+            const booksDiv = document.getElementById(`user-books-${id}`);
+            const q = query(collection(db, "books"), where("phone", "==", phone)); 
+            const bSnap = await getDocs(q);
+            
+            booksDiv.innerHTML = "<strong style='font-size:13px; color:var(--primary);'>আপলোডকৃত বই:</strong>";
+            if(bSnap.empty) {
+                booksDiv.innerHTML += "<br><small>কোনো বই নেই।</small>";
+            } else {
+                bSnap.forEach(bDoc => {
+                    const bData = bDoc.data();
+                    booksDiv.innerHTML += `
+                        <div class="book-row" id="b-row-${bDoc.id}">
+                            <span>📗 ${bData.bookName}</span>
+                            <button class="btn delete-btn" style="padding:4px 8px; font-size:10px;" onclick="deleteSingleBook('${bDoc.id}')">মুছুন</button>
+                        </div>`;
+                });
+            }
+        } else {
+            container.classList.remove('active');
+        }
+    };
+
+    window.deleteSingleBook = async (bookId) => {
+        if(confirm("বইটি মুছে ফেলবেন?")) {
+            await deleteDoc(doc(db, "books", bookId));
+            document.getElementById(`b-row-${bookId}`).remove();
+            showModal("✅", "বইটি মুছে ফেলা হয়েছে।");
+        }
+    };
+
+    window.deleteUser = async (uid, phone) => {
+        if(confirm("ইউজার ও তার সকল তথ্য মুছে ফেলবেন?")) {
+            const q = query(collection(db, "books"), where("phone", "==", phone));
+            const bSnap = await getDocs(q);
+            const batch = writeBatch(db);
+            bSnap.forEach(d => batch.delete(d.ref));
+            await batch.commit();
+            await deleteDoc(doc(db, "users", uid));
+            document.getElementById(`u-cont-${uid}`).remove();
+            showModal("✅", "ইউজার ও তার সকল বই রিমুভ হয়েছে।");
+        }
+    };
+
+    window.deleteAllData = async () => {
+        if(confirm("সাবধান! পুরো ডাটাবেজ পরিষ্কার হয়ে যাবে। নিশ্চিত?")) {
+            const collections = ['users', 'books'];
+            for (const col of collections) {
+                const snap = await getDocs(collection(db, col));
+                const batch = writeBatch(db);
+                snap.forEach(d => batch.delete(d.ref));
+                await batch.commit();
+            }
+            location.reload();
+        }
+    };
+
+    function showModal(icon, msg) {
+        document.getElementById('modalIcon').innerText = icon;
+        document.getElementById('modalText').innerText = msg;
+        document.getElementById('statusModal').style.display = 'flex';
+    }
+    window.closeModal = () => { document.getElementById('statusModal').style.display = 'none'; };
+</script>
+</body>
+</html>

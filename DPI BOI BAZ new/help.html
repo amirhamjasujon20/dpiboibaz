@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>সহায়তা - DPI Boi Baz</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: rgba(0,0,0,0.4); /* হালকা ঝাপসা ব্যাকগ্রাউন্ড */
+            margin: 0; 
+            height: 100vh; 
+            overflow: hidden; 
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-end; 
+        }
+
+        /* প্রিমিয়াম স্লাইড-আপ উইন্ডো */
+        .help-window {
+            background: #ffffff;
+            width: 100%;
+            max-width: 450px;
+            padding: 25px;
+            border-top-left-radius: 25px;
+            border-top-right-radius: 25px;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.3);
+            transform: translateY(100%);
+            animation: springUp 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards;
+            box-sizing: border-box;
+        }
+
+        @keyframes springUp {
+            to { transform: translateY(0); }
+        }
+
+        /* ড্র্যাগ হ্যান্ডেল বার */
+        .handle {
+            width: 40px; height: 5px; background: #ddd; border-radius: 10px;
+            margin: -10px auto 20px;
+        }
+
+        h2 { 
+            color: #006747; font-size: 1.2rem; text-align: center; margin-bottom: 20px; 
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+
+        .help-list { list-style: none; padding: 0; margin: 0; }
+
+        .help-item {
+            display: flex; gap: 15px; margin-bottom: 18px; align-items: flex-start;
+            padding: 10px; border-radius: 12px; transition: 0.3s;
+        }
+        .help-item:hover { background: #f9f9f9; }
+
+        .icon-box {
+            background: #e6f0ed; color: #006747; min-width: 32px; height: 32px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: bold;
+        }
+
+        .help-text { font-size: 13.5px; color: #444; line-height: 1.5; flex: 1; }
+
+        .help-link {
+            color: #E03C31; text-decoration: none; font-weight: bold;
+            font-size: 12px; display: inline-block; margin-top: 5px;
+            border-bottom: 1px dashed #ffccc7;
+        }
+
+        /* ব্যাক হোম গোল বাটন */
+        .back-home {
+            display: flex; align-items: center; justify-content: center; gap: 5px;
+            margin-top: 15px; color: #888; text-decoration: none; font-size: 13px;
+            padding: 10px; transition: 0.3s;
+        }
+        .back-home:hover { color: #006747; }
+
+        /* মোবাইল স্ক্রিনের জন্য বিশেষ অপ্টিমাইজেশন */
+        @media (max-width: 400px) {
+            .help-window { padding: 20px; }
+            .help-text { font-size: 12.5px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="help-window">
+        <div class="handle"></div>
+        <h2><i class="fa-solid fa-circle-question"></i> সহায়তা কেন্দ্র</h2>
+        
+        <div class="help-list">
+            <div class="help-item">
+                <div class="icon-box">১</div>
+                <div class="help-text">
+                    বাংলায় নাম, ফোন নম্বর এবং ৬ ডিজিটের পাসওয়ার্ড দিয়ে অ্যাকাউন্ট তৈরি করুন।
+                    <br><a href="signup.html" class="help-link">নতুন অ্যাকাউন্ট খুলুন →</a>
+                </div>
+            </div>
+            
+            <div class="help-item">
+                <div class="icon-box">২</div>
+                <div class="help-text">
+                    অ্যাকাউন্ট তৈরি হয়ে গেলে আপনার ফোন নম্বর ও পাসওয়ার্ড দিয়ে লগইন করুন।
+                    <br><a href="login.html" class="help-link">লগইন পেজে যান →</a>
+                </div>
+            </div>
+            
+            <div class="help-item">
+                <div class="icon-box">৩</div>
+                <div class="help-text">
+                    পুরাতন বই বিক্রির জন্য 'বই বিক্রি করুন' এবং পুরাতন বই কিনতে 'বই কিনুন' অপশন ব্যবহার করুন।
+                </div>
+            </div>
+            
+            <div class="help-item">
+                <div class="icon-box">৪</div>
+                <div class="help-text">
+                    পাসওয়ার্ড ভুলে গেলে বা কোনো সমস্যা হলে সরাসরি অ্যাডমিনের সাথে কথা বলুন।
+                    <br><a href="https://wa.me/8801571067027" class="help-link" target="_blank">হোয়াটসঅ্যাপে যোগাযোগ →</a>
+                </div>
+            </div>
+        </div>
+
+        <a href="index.html" class="back-home">
+            <i class="fa-solid fa-house"></i> হোম পেজে ফিরে যান
+        </a>
+    </div>
+
+</body>
+</html>
