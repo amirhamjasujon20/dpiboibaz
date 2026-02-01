@@ -102,7 +102,6 @@
 
         let selectedEmail = "";
 
-        // Google Sign-In Callback
         window.handleCredentialResponse = (response) => {
             const payload = JSON.parse(atob(response.credential.split('.')[1]));
             selectedEmail = payload.email;
@@ -147,7 +146,7 @@
                 if (!snap.empty) {
                     showAlert("❌", "এই নম্বরে ইতিমধ্যে অ্যাকাউন্ট আছে!");
                 } else {
-                    await addDoc(collection(db, "users"), { 
+                    const docRef = await addDoc(collection(db, "users"), { 
                         name, 
                         phone: fullPhone, 
                         pass,
@@ -155,10 +154,12 @@
                         createdAt: serverTimestamp() 
                     });
                     
+                    // অটো-লগইন এর জন্য ডাটা স্টোর করা
+                    localStorage.setItem('userId', docRef.id);
                     localStorage.setItem('userName', name);
                     localStorage.setItem('userPhone', fullPhone);
 
-                    showAlert("✅", "অ্যাকাউন্ট তৈরি সফল! লগইন হচ্ছে...");
+                    showAlert("✅", "অ্যাকাউন্ট তৈরি সফল! লগইন হচ্ছে...", false);
                     setTimeout(() => { window.location.href = "index.html"; }, 1500);
                 }
             } catch (e) {
