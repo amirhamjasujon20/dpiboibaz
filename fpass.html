@@ -3,114 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>পাসওয়ার্ড উদ্ধার - DPI Boi Baz</title>
+    <title>পাসওয়ার্ড পুনরুদ্ধার - DPI Boi Baz</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f2f5;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            overflow: hidden;
-        }
-
-        /* নিচ থেকে ওঠার অ্যানিমেশন */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(100px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .container {
-            text-align: center;
-            background: white;
-            padding: 40px 20px;
-            border-radius: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            width: 85%;
-            max-width: 380px;
-            animation: fadeInUp 1.5s ease-out; /* ধীরগতিতে ১.৫ সেকেন্ড ধরে উঠবে */
-        }
-
-        .logo-section {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 25px;
-        }
-
-        .logo-section img {
-            width: 50px;
-            height: 50px;
-            margin-right: 10px;
-            border-radius: 10px;
-        }
-
-        .logo-section h1 {
-            font-size: 28px;
-            color: #006747;
-            margin: 0;
-            font-weight: bold;
-        }
-
-        .message {
-            font-size: 16px;
-            color: #444;
-            line-height: 1.6;
-            margin-bottom: 30px;
-        }
-
-        .whatsapp-btn {
-            background-color: #25D366;
-            color: white;
-            text-decoration: none;
-            padding: 15px 25px;
-            border-radius: 50px;
-            font-size: 18px;
-            font-weight: bold;
-            display: inline-flex;
-            align-items: center;
-            transition: 0.3s;
-            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
-        }
-
-        .whatsapp-btn i {
-            font-size: 24px;
-            margin-right: 10px;
-        }
-
-        .whatsapp-btn:hover {
-            transform: scale(1.05);
-            background-color: #1eb954;
-        }
+        body { font-family: 'Arial', sans-serif; background: #f4f7f6; height: 100vh; margin: 0; display: flex; justify-content: center; align-items: center; }
+        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 350px; text-align: center; }
+        h2 { color: #006747; margin-bottom: 20px; font-size: 20px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 16px; outline: none; }
+        .btn { width: 100%; background: #006747; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.3s; }
+        .btn:hover { background: #004d35; }
+        .step { display: none; }
+        .step.active { display: block; }
+        .info-text { font-size: 13px; color: #666; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="logo-section">
-            <img src="favicon.png" alt="Logo"> 
-            <h1>Boi Baz</h1>
+    <div class="card">
+        <div id="step1" class="step active">
+            <h2>পাসওয়ার্ড পুনরুদ্ধার</h2>
+            <p class="info-text">আপনার অ্যাকাউন্টের ফোন নাম্বারটি দিন</p>
+            <input type="text" id="phone" placeholder="01XXXXXXXXX" maxlength="11">
+            <button class="btn" onclick="sendOTP()">OTP পাঠান</button>
         </div>
 
-        <div class="message">
-            পাসওয়ার্ড ভুলে গিয়ে থাকলে নিচের হোয়াটসঅ্যাপ আইকনে ক্লিক করে এডমিনকে মেসেজ দিয়ে আপনার ফোন নাম্বার লিখে রাখুন।
+        <div id="step2" class="step">
+            <h2>OTP যাচাই করুন</h2>
+            <p class="info-text" id="otpDisplay"></p>
+            <input type="text" id="otpInput" placeholder="৪ ডিজিটের কোড দিন" maxlength="4">
+            <button class="btn" onclick="verifyOTP()">যাচাই করুন</button>
         </div>
 
-        <a href="https://wa.me/8801571067027?text=আমি আমার অ্যাকাউন্টের পাসওয়ার্ড ভুলে গেছি। আমার ফোন নম্বর হলো: " class="whatsapp-btn">
-            <i class="fa-brands fa-whatsapp"></i>
-            মেসেজ দিন
-        </a>
+        <div id="step3" class="step">
+            <h2>নতুন পাসওয়ার্ড</h2>
+            <p class="info-text">ঠিক ৬ ডিজিটের পাসওয়ার্ড দিন</p>
+            <input type="password" id="newPass" placeholder="••••••" maxlength="6">
+            <button class="btn" onclick="updatePassword()">নতুন পাসওয়ার্ড সেট করুন</button>
+        </div>
     </div>
 
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, query, where, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // আপনার নতুন ডাটাবেজ কনফিগারেশন
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_7v6rBHjVLHVK5OGiJpkgBzAuaJO8vn0",
+            authDomain: "boi-baz-v2.firebaseapp.com",
+            projectId: "boi-baz-v2",
+            storageBucket: "boi-baz-v2.firebasestorage.app",
+            messagingSenderId: "573343324145",
+            appId: "1:573343324145:web:42899dd75501af36985650"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let userDocId = "";
+        let generatedOTP = "";
+        let userPhone = "";
+        let userName = "";
+
+        // ধাপ ১: ওটিপি পাঠানো (সিমুলেটেড)
+        window.sendOTP = async function() {
+            let phone = document.getElementById('phone').value.trim();
+            if (phone.length < 11) { alert("সঠিক ফোন নাম্বার দিন"); return; }
+            
+            // ফোন নাম্বার ফরম্যাট ঠিক করা (+880 যোগ করা)
+            const fullPhone = phone.startsWith("+88") ? phone : "+88" + (phone.startsWith("0") ? phone.substring(1) : phone);
+            
+            // ডাটাবেজে ইউজার খোঁজা
+            const q = query(collection(db, "users"), where("phone", "==", fullPhone));
+            const snap = await getDocs(q);
+
+            if (snap.empty) {
+                alert("এই নাম্বারে কোনো অ্যাকাউন্ট পাওয়া যায়নি!");
+            } else {
+                userDocId = snap.docs[0].id;
+                userName = snap.docs[0].data().name;
+                userPhone = fullPhone;
+                
+                // ওটিপি তৈরি (ডেমো হিসেবে স্ক্রিনে দেখাবে)
+                generatedOTP = Math.floor(1000 + Math.random() * 9000).toString();
+                document.getElementById('otpDisplay').innerText = "আপনার ডেমো OTP হলো: " + generatedOTP;
+                
+                showStep(2);
+            }
+        }
+
+        // ধাপ ২: ওটিপি যাচাই
+        window.verifyOTP = function() {
+            let inputOTP = document.getElementById('otpInput').value.trim();
+            if (inputOTP === generatedOTP) {
+                showStep(3);
+            } else {
+                alert("ভুল OTP! আবার চেষ্টা করুন।");
+            }
+        }
+
+        // ধাপ ৩: পাসওয়ার্ড আপডেট ও অটো লগইন
+        window.updatePassword = async function() {
+            let pass = document.getElementById('newPass').value.trim();
+            if (pass.length !== 6) { alert("পাসওয়ার্ড ৬ ডিজিটের হতে হবে"); return; }
+
+            try {
+                const userRef = doc(db, "users", userDocId);
+                await updateDoc(userRef, { pass: pass });
+
+                // অটো লগইন ডাটা সেভ করা
+                localStorage.setItem('userId', userDocId);
+                localStorage.setItem('userName', userName);
+                localStorage.setItem('userPhone', userPhone);
+
+                alert("পাসওয়ার্ড আপডেট সফল! লগইন হচ্ছে...");
+                window.location.href = "index.html"; // হোম পেজে নিয়ে যাবে
+            } catch (e) {
+                alert("সমস্যা হয়েছে, আবার চেষ্টা করুন।");
+            }
+        }
+
+        function showStep(stepNum) {
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.getElementById('step' + stepNum).classList.add('active');
+        }
+    </script>
 </body>
 </html>
