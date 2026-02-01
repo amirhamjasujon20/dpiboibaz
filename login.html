@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>লগইন - DPI Boi Baz</title> <meta name="description" content="ঢাকা পলিটেকনিকের বই কেনা-বেচার প্ল্যাটফর্ম">
+    </head>
+
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { 
+            font-family: 'Arial', sans-serif; 
+            background: radial-gradient(circle, rgba(224, 60, 49, 0.1) 20%, rgba(0, 103, 71, 0.1) 100%); 
+            height: 100vh; margin: 0; display: flex; justify-content: center; align-items: center; 
+            overflow: hidden; position: relative;
+        }
+        .card { 
+            background: white; padding: 30px; border-radius: 15px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; 
+        }
+        h2 { color: #006747; margin-bottom: 25px; }
+
+        .phone-container {
+            display: flex; align-items: center; background: #f9f9f9;
+            border: 1px solid #ccc; border-radius: 8px; margin-bottom: 15px; overflow: hidden;
+        }
+        .prefix { background: #eee; padding: 12px; color: #555; font-weight: bold; border-right: 1px solid #ccc; }
+        .phone-container input { border: none; flex: 1; background: transparent; }
+
+        .input-group { position: relative; width: 100%; margin: 10px 0; }
+        input { 
+            width: 100%; padding: 12px 15px; border: 1px solid #ccc; 
+            border-radius: 8px; box-sizing: border-box; outline: none; font-size: 16px; 
+        }
+        input:focus { border-color: #006747; }
+
+        .toggle-btn { 
+            position: absolute; right: 12px; top: 50%; transform: translateY(-50%); 
+            background: none; border: none; cursor: pointer; color: #888; font-size: 18px;
+        }
+
+        .btn { 
+            width: 100%; background: #006747; color: white; border: none; 
+            padding: 12px; margin-top: 15px; border-radius: 8px; cursor: pointer; 
+            font-size: 18px; font-weight: bold; transition: 0.3s;
+        }
+        .btn:hover { background: #004d35; }
+
+        .forget-link { margin-top: 15px; display: block; text-decoration: none; color: #555; font-size: 14px; }
+        .forget-link:hover { color: #E03C31; text-decoration: underline; }
+
+        .home-btn {
+            position: fixed; bottom: 30px; left: 30px;
+            width: 50px; height: 50px; background: #006747; color: white;
+            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            text-decoration: none; font-size: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: 0.3s;
+        }
+        .home-btn:hover { transform: scale(1.1); background: #E03C31; }
+
+        .footer-link { margin-top: 15px; font-size: 14px; }
+        .footer-link a { color: #E03C31; text-decoration: none; font-weight: bold; }
+
+        #alertModal { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); 
+            justify-content: center; align-items: center; z-index: 1000; 
+        }
+        .modal-box { 
+            background: white; padding: 25px; border-radius: 15px; width: 85%; max-width: 320px; 
+            text-align: center;
+        }
+        .zoom-in { animation: zoom 0.3s ease-out; }
+        @keyframes zoom { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .swipe-up { animation: swipe 0.4s forwards; }
+        @keyframes swipe { to { transform: translateY(-100vh); opacity: 0; } }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>লগইন করুন</h2>
+        
+        <div class="phone-container">
+            <span class="prefix">+880</span>
+            <input type="number" id="phone" placeholder="শেষের ১০ ডিজিট লিখুন">
+        </div>
+
+        <div class="input-group">
+            <input type="password" id="pass" placeholder="পাসওয়ার্ড">
+            <button class="toggle-btn" onclick="togglePass()">
+                <i id="eyeIcon" class="fa-solid fa-eye"></i>
+            </button>
+        </div>
+
+        <button class="btn" onclick="handleLogin()">লগইন</button>
+
+        <a href="fpass.html" class="forget-link">পাসওয়ার্ড ভুলে গেছেন?</a>
+
+        <div class="footer-link">অ্যাকাউন্ট নেই? <a href="signup.html">নতুন তৈরি করুন</a></div>
+    </div>
+
+    <a href="index.html" class="home-btn" title="হোমে যান">
+        <i class="fa-solid fa-arrow-left"></i>
+    </a>
+
+    <div id="alertModal">
+        <div class="modal-box" id="modalBox">
+            <div id="modalIcon" style="font-size: 50px; margin-bottom: 10px;"></div>
+            <div id="modalText" style="font-size: 18px; font-weight: bold; color: #333;"></div>
+            <button id="okBtn" class="btn" style="margin-top: 20px; display: none;" onclick="closeModal()">ঠিক আছে</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // নতুন ডাটাবেজ কনফিগারেশন (Boi Baz v2)
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_7v6rBHjVLHVK5OGiJpkgBzAuaJO8vn0",
+            authDomain: "boi-baz-v2.firebaseapp.com",
+            projectId: "boi-baz-v2",
+            storageBucket: "boi-baz-v2.firebasestorage.app",
+            messagingSenderId: "573343324145",
+            appId: "1:573343324145:web:42899dd75501af36985650",
+            measurementId: "G-75YZQFQ0TT"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.togglePass = function() {
+            const p = document.getElementById('pass');
+            const icon = document.getElementById('eyeIcon');
+            if (p.type === "password") {
+                p.type = "text";
+                icon.classList.replace("fa-eye", "fa-eye-slash");
+            } else {
+                p.type = "password";
+                icon.classList.replace("fa-eye-slash", "fa-eye");
+            }
+        }
+
+        window.handleLogin = async function() {
+            const phoneInput = document.getElementById('phone').value;
+            const pass = document.getElementById('pass').value;
+            const fullPhone = "+880" + phoneInput;
+
+            if (!phoneInput || !pass) {
+                showAlert("⚠️", "সবগুলো ঘর পূরণ করুন", true);
+                return;
+            }
+
+            if (phoneInput.length !== 10) {
+                showAlert("⚠️", "সঠিক ১০ ডিজিট নম্বর লিখুন", true);
+                return;
+            }
+
+            try {
+                const q = query(collection(db, "users"), where("phone", "==", fullPhone));
+                const snap = await getDocs(q);
+
+                if (snap.empty) {
+                    showAlert("❌", "এই নম্বরে কোন অ্যাকাউন্ট নেই, প্রয়োজনে অ্যাকাউন্ট তৈরী করুন ", true);
+                } else {
+                    const userDoc = snap.docs[0];
+                    const userData = userDoc.data();
+
+                    if (userData.pass === pass) {
+                        localStorage.setItem('userId', userDoc.id); 
+                        localStorage.setItem('userName', userData.name);
+                        localStorage.setItem('userPhone', userData.phone);
+
+                        showAlert("⏳", "একটু দাঁড়ান, লগইন হচ্ছে...", false);
+                        
+                        setTimeout(() => {
+                            document.getElementById('modalBox').classList.add('swipe-up');
+                            setTimeout(() => { window.location.href = "index.html"; }, 400);
+                        }, 1200);
+                    } else {
+                        showAlert("🚫", "ভুল পাসওয়ার্ড", true);
+                    }
+                }
+            } catch (e) {
+                showAlert("🚨", "সার্ভারে সমস্যা!", true);
+            }
+        }
+
+        function showAlert(icon, msg, btn) {
+            document.getElementById('modalIcon').innerText = icon;
+            document.getElementById('modalText').innerText = msg;
+            document.getElementById('okBtn').style.display = btn ? 'inline-block' : 'none';
+            document.getElementById('alertModal').style.display = 'flex';
+            document.getElementById('modalBox').className = 'modal-box zoom-in';
+        }
+
+        window.closeModal = function() { document.getElementById('alertModal').style.display = 'none'; }
+    </script>
+</body>
+</html>
