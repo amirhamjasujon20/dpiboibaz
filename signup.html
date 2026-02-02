@@ -100,17 +100,17 @@
         <p id="userMailInfo" style="font-size: 13px; text-align: center; color: #666; background: #f0f0f0; padding: 8px; border-radius: 8px;"></p>
         
         <label>আপনার নাম (বাংলায়)</label>
-        <div class="input-group"><input type="text" id="name" placeholder=" যেমন: আমীর হামজা "></div>
+        <div class="input-group"><input type="text" id="name" placeholder="আপনার নাম দিন"></div>
 
         <label>ফোন নাম্বার লিখুন</label>
         <div class="phone-container" id="phoneBox">
             <span class="prefix">+880</span>
-            <input type="text" id="phone" placeholder="1XXXXXXXXX" maxlength="10">
+            <input type="text" id="phone" placeholder=" (১ দ্বারা শুরু) শেষের ১০ সংখ্যা " maxlength="10">
         </div>
 
         <label>পাসওয়ার্ড (ঠিক ৬ ডিজিট)</label>
         <div class="input-group">
-            <input type="password" id="pass" placeholder="••••••" maxlength="6">
+            <input type="password" id="pass" placeholder="৬ সংখ্যার কম বেশি নয়" maxlength="6">
             <i class="fa-solid fa-eye eye-btn" id="togglePass" onclick="togglePassword()"></i>
         </div>
 
@@ -224,7 +224,7 @@
             
             // ফোন নম্বর লাল থাকলে বা ১০ ডিজিট না হলে বাধা দিবে
             if (phoneBox.classList.contains('invalid-box') || pVal.length !== 10) { 
-                showAlert("🚫", "সঠিক নম্বর দিন", "ফোন নম্বরের প্রথম ডিজিট ১ এবং দ্বিতীয় ডিজিট ৩-৯ হতে হবে।"); 
+                showAlert("🚫", "সঠিক নম্বর দিন", "আপনি ভুল ফোন নাম্বার দিয়েছেন, দয়া করে সঠিক নাম্বার দিন ।"); 
                 return; 
             }
             
@@ -271,3 +271,4 @@
     </script>
 </body>
 </html>
+
