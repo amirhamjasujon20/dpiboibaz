@@ -6,13 +6,14 @@
     <title>হোম পেজ - DPI Boi Baz</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="manifest" href="manifest.json">
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <link rel="canonical" href="https://dpiboibaz.netlify.app/" />
     <style>
         body { 
             font-family: 'Arial', sans-serif; 
             margin: 0; padding: 0;
             background: radial-gradient(circle, rgba(224, 60, 49, 0.05) 20%, rgba(0, 103, 71, 0.05) 100%);
             display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+            overflow-x: hidden;
         }
 
         header {
@@ -21,34 +22,47 @@
             box-sizing: border-box; position: sticky; top: 0; z-index: 100;
         }
         
-        /* লাল বক্স হেডারের নিচে এবং মাঝে */
+        /* লাল বক্স - হেডারের নিচে এবং মাঝে */
         #emailWarningBar {
-            display: none; width: 90%; max-width: 380px; background: rgba(224, 60, 49, 0.9);
-            color: white; text-align: center; padding: 10px; font-size: 13px;
-            margin-top: 10px; border-radius: 8px; cursor: pointer; font-weight: bold;
-            box-shadow: 0 4px 10px rgba(224, 60, 49, 0.3); z-index: 90;
+            display: none; width: 90%; max-width: 350px; 
+            background: rgba(224, 60, 49, 0.9);
+            color: white; text-align: center; padding: 10px; 
+            font-size: 13px; cursor: pointer; font-weight: bold; 
+            border-radius: 0 0 15px 15px; margin: 0 auto;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            animation: slideDown 0.5s ease-out;
+            z-index: 90;
         }
+        @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
         .logo-section { display: flex; align-items: center; gap: 8px; cursor: pointer; text-decoration: none; color: white; }
         .logo-img { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid white; background: white; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .logo-img img { width: 100%; height: 100%; object-fit: cover; }
-        .logo-text { font-size: 14px; font-weight: bold; }
+        .logo-text { font-size: 14px; font-weight: bold; letter-spacing: 0.5px; }
 
         .user-profile { display: flex; align-items: center; gap: 8px; cursor: pointer; text-decoration: none; color: white; }
-        .user-avatar { width: 32px; height: 32px; background: #E03C31; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; border: 2px solid white; }
+        .user-name { font-size: 13px; font-weight: bold; }
+        .user-avatar { width: 32px; height: 32px; background: #E03C31; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 16px; border: 2px solid white; }
+
+        .hero { text-align: center; padding: 30px 20px 10px 20px; width: 100%; box-sizing: border-box; }
+        .hero h1 { color: #006747; font-size: 18px; margin-bottom: 5px; }
+        .hero p { color: #666; font-size: 13px; margin-top: 0; }
 
         .main-container {
             display: flex; flex-direction: column; align-items: center; gap: 15px;
-            width: 100%; max-width: 400px; padding: 20px; flex-grow: 1;
+            width: 100%; max-width: 400px; padding: 0 20px; margin-top: 10px; position: relative; flex-grow: 1;
         }
 
         .action-card {
             width: 100%; background: white; padding: 20px; border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.06); text-align: center;
-            cursor: pointer; border: 1px solid #eee; box-sizing: border-box;
+            cursor: pointer; transition: 0.3s; text-decoration: none; border: 1px solid #eee;
         }
-        
-        /* মোডাল স্টাইল */
+        .action-card:active { transform: scale(0.98); }
+        .action-card i { font-size: 35px; margin-bottom: 10px; }
+        .action-card h3 { margin: 5px 0; color: #333; font-size: 16px; }
+        .action-card p { color: #777; font-size: 12px; margin: 0; }
+
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.5); backdrop-filter: blur(5px);
@@ -59,6 +73,7 @@
         .btn-gray { background: #f0f0f0; color: #666; padding: 10px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
@@ -71,36 +86,41 @@
     </header>
 
     <div id="emailWarningBar" onclick="showEmailModal()">
-        <i class="fa-solid fa-triangle-exclamation"></i> ইমেইল ভেরিফিকেশন প্রয়োজন
+        ⚠️ ইমেইল যাচাই করুন (এখানে ক্লিক করুন)
+    </div>
+
+    <div class="hero">
+        <h1 id="welcomeTitle">স্বাগতম...</h1>
+        <p>আপনার প্রয়োজনীয় পুরাতন বই খুঁজে নিন অথবা বিক্রি করুন</p>
     </div>
 
     <div class="main-container">
         <div class="action-card" onclick="handleAction('buy.html')" style="border-left: 5px solid #006747;">
-            <i class="fa-solid fa-book-open" style="font-size: 35px; color: #006747;"></i>
+            <i class="fa-solid fa-book-open" style="color: #006747;"></i>
             <h3>বই কিনুন (Buy)</h3>
-            <p style="font-size: 12px; color: #777;">প্রয়োজনীয় পুরাতন বই খুঁজুন</p>
+            <p>আপনার প্রয়োজনীয় পুরাতন বইগুলো এখান থেকে খুঁজুন</p>
         </div>
 
         <div class="action-card" onclick="handleAction('sell.html')" style="border-left: 5px solid #E03C31;">
-            <i class="fa-solid fa-tag" style="font-size: 35px; color: #E03C31;"></i>
+            <i class="fa-solid fa-book-open" style="color: #E03C31;"></i>
             <h3>বই বিক্রি (Sell)</h3>
-            <p style="font-size: 12px; color: #777;">পুরাতন বইয়ের বিজ্ঞাপন দিন</p>
+            <p>আপনার পুরাতন বইয়ের বিজ্ঞাপন দিন একদম ফ্রিতে</p>
         </div>
     </div>
 
     <div id="emailVerifyModal" class="modal">
         <div class="modal-box">
-            <i class="fa-solid fa-envelope-open-text" style="font-size: 40px; color: #E03C31; margin-bottom: 15px;"></i>
-            <h3>ইমেইল যুক্ত করুন</h3>
-            <p style="font-size: 14px; color: #555;">নিরাপদ কেনাবেচার জন্য আপনার গুগল ইমেইলটি ভেরিফাই করুন।</p>
+            <i class="fa-solid fa-envelope-circle-check" style="font-size: 40px; color: #E03C31; margin-bottom: 15px;"></i>
+            <h3>ইমেইল ভেরিফিকেশন</h3>
+            <p>বেচা-কেনার পূর্বে আপনার ডিভাইসের ইমেইল দিয়ে অ্যাকাউন্টটি যাচাই করে নিন।</p>
             
             <div id="g_id_onload"
                  data-client_id="597064565585-e9kc3a4ovhf6e85fk3r5jmqfsh1er2hr.apps.googleusercontent.com"
-                 data-callback="handleCredentialResponse"
+                 data-callback="handleEmailResponse"
                  data-auto_prompt="false">
             </div>
+            <div class="g_id_signin" data-type="standard"></div>
 
-            <button class="btn-red" onclick="triggerGoogleSignIn()">এখনই করুন</button>
             <button class="btn-gray" onclick="closeModals()">পরে করুন</button>
         </div>
     </div>
@@ -128,10 +148,12 @@
                 onSnapshot(doc(db, "users", currentUserId), (docSnap) => {
                     if (docSnap.exists()) {
                         const userData = docSnap.data();
+                        document.getElementById('welcomeTitle').innerText = `স্বাগতম, ${userData.name}`;
                         document.getElementById('authSection').innerHTML = `
-                            <div class="user-profile">
+                            <a href="edit.html" class="user-profile">
+                                <span class="user-name">${userData.name}</span>
                                 <div class="user-avatar">${userData.name.charAt(0)}</div>
-                            </div>`;
+                            </a>`;
                         
                         if (!userData.email || userData.email === "") {
                             hasEmail = false;
@@ -142,14 +164,29 @@
                         }
                     }
                 });
-            } else {
-                document.getElementById('authSection').innerHTML = `<a href="login.html" style="color:white; text-decoration:none; font-size:13px;">লগইন</a>`;
+            }
+        };
+
+        // গুগল ইমেইল বাছাই করার পর ডাটাবেজে সেভ করা
+        window.handleEmailResponse = async (response) => {
+            const payload = JSON.parse(atob(response.credential.split('.')[1]));
+            const selectedEmail = payload.email;
+
+            if (selectedEmail) {
+                try {
+                    const userRef = doc(db, "users", currentUserId);
+                    await updateDoc(userRef, { email: selectedEmail });
+                    alert("ইমেইল সফলভাবে যাচাই হয়েছে!");
+                    closeModals();
+                } catch (e) {
+                    alert("ডাটাবেজ আপডেটে সমস্যা হয়েছে।");
+                }
             }
         };
 
         window.handleAction = (page) => {
             if (!currentUserId) {
-                window.location.href = 'login.html';
+                window.location.href='login.html';
             } else if (!hasEmail) {
                 document.getElementById('emailVerifyModal').style.display = 'flex';
             } else {
@@ -157,29 +194,12 @@
             }
         };
 
-        window.showEmailModal = () => { document.getElementById('emailVerifyModal').style.display = 'flex'; };
-        window.closeModals = () => { document.getElementById('emailVerifyModal').style.display = 'none'; };
-
-        // গুগল সাইন-ইন ট্রিগার
-        window.triggerGoogleSignIn = () => {
-            google.accounts.id.prompt();
+        window.showEmailModal = () => {
+            document.getElementById('emailVerifyModal').style.display = 'flex';
         };
 
-        // গুগল থেকে ইমেইল পাওয়ার পর ডাটাবেজ আপডেট
-        window.handleCredentialResponse = async (response) => {
-            const payload = JSON.parse(atob(response.credential.split('.')[1]));
-            const email = payload.email;
-
-            if (email) {
-                try {
-                    const userRef = doc(db, "users", currentUserId);
-                    await updateDoc(userRef, { email: email });
-                    alert("ইমেইল সফলভাবে ভেরিফাই হয়েছে!");
-                    closeModals();
-                } catch (e) {
-                    alert("Error: " + e.message);
-                }
-            }
+        window.closeModals = () => {
+            document.getElementById('emailVerifyModal').style.display = 'none';
         };
     </script>
 </body>
