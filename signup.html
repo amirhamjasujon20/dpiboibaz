@@ -7,29 +7,78 @@
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.cdnfonts.com/css/solaimanlipi" rel="stylesheet">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
-        body { font-family: 'Arial', sans-serif; background: radial-gradient(circle, rgba(224, 60, 49, 0.1) 20%, rgba(0, 103, 71, 0.1) 100%); height: 100vh; margin: 0; display: flex; justify-content: center; align-items: center; overflow: hidden; position: relative; }
-        .card { background: white; padding: 25px 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 380px; text-align: left; position: relative; z-index: 10; }
-        h2 { color: #006747; text-align: center; margin-bottom: 15px; font-size: 22px; }
-        label { display: block; margin-top: 12px; font-weight: bold; color: #555; font-size: 13px; }
+        body { 
+            font-family: 'SolaimanLipi', sans-serif; 
+            background: radial-gradient(circle, rgba(224, 60, 49, 0.1) 20%, rgba(0, 103, 71, 0.1) 100%); 
+            height: 100vh; margin: 0; display: flex; justify-content: center; align-items: center; 
+            overflow: hidden; position: relative; 
+        }
+        .card { 
+            background: white; padding: 25px 30px; border-radius: 20px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 380px; 
+            text-align: left; position: relative; z-index: 10; 
+        }
+        h2 { color: #006747; text-align: center; margin-bottom: 15px; font-size: 24px; }
+        label { display: block; margin-top: 12px; font-weight: bold; color: #555; font-size: 14px; }
+        
         .input-group { position: relative; width: 100%; margin-top: 5px; display: flex; align-items: center; }
-        input { width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; outline: none; font-size: 16px; transition: 0.3s; }
+        input { 
+            width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 10px; 
+            box-sizing: border-box; outline: none; font-size: 16px; transition: 0.3s; font-family: inherit;
+        }
         input:focus { border-color: #006747; background: #f0fdf4; }
+        
+        /* ফোন নম্বর এরর স্টাইল */
+        input.invalid { border: 2px solid #E03C31; background: #fff5f5; }
+
         .eye-btn { position: absolute; right: 12px; cursor: pointer; color: #888; font-size: 18px; }
-        .phone-container { display: flex; align-items: center; background: #f9f9f9; border: 1px solid #ccc; border-radius: 8px; overflow: hidden; margin-top: 5px; }
+        
+        .phone-container { 
+            display: flex; align-items: center; background: #f9f9f9; 
+            border: 1px solid #ccc; border-radius: 10px; overflow: hidden; margin-top: 5px; 
+        }
         .prefix { background: #eee; padding: 12px; color: #555; font-weight: bold; border-right: 1px solid #ccc; }
         .phone-container input { border: none; flex: 1; background: transparent; }
-        .btn { width: 100%; background: #006747; color: white; border: none; padding: 10px; margin-top: 20px; border-radius: 8px; cursor: pointer; font-size: 17px; font-weight: bold; transition: 0.3s; }
+        
+        .btn { 
+            width: 100%; background: #006747; color: white; border: none; padding: 12px; 
+            margin-top: 20px; border-radius: 10px; cursor: pointer; font-size: 18px; 
+            font-weight: bold; transition: 0.3s; font-family: inherit;
+        }
         .btn:hover { background: #004d35; transform: scale(1.02); }
-        .btn-help { width: 100%; background: #f0f0f0; color: #555; border: 1px solid #ddd; padding: 5px; margin-top: 30px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: bold; text-align: center; text-decoration: none; display: block; box-sizing: border-box; transition: 0.3s; }
-        .footer-link { margin-top: 15px; font-size: 13px; text-align: center; color: #666; }
-        .footer-link a { color: #E03C31; text-decoration: none; font-weight: bold; }
-        .home-btn { position: fixed; bottom: 30px; left: 30px; width: 50px; height: 50px; background: #006747; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; text-decoration: none; font-size: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: 0.3s; z-index: 100; }
+        .btn-red { background: #E03C31; }
+        .btn-red:hover { background: #c0342a; }
 
-        #authOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.98); z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; box-sizing: border-box; }
-        #statusModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 3000; }
-        .modal-box { background: white; padding: 25px; border-radius: 15px; width: 85%; max-width: 320px; text-align: center; }
+        .btn-help { 
+            width: 100%; background: #f0f0f0; color: #555; border: 1px solid #ddd; 
+            padding: 8px; margin-top: 25px; border-radius: 10px; cursor: pointer; 
+            font-size: 14px; text-align: center; text-decoration: none; display: block; 
+            box-sizing: border-box; transition: 0.3s; 
+        }
+        
+        .footer-link { margin-top: 15px; font-size: 14px; text-align: center; color: #666; }
+        .footer-link a { color: #E03C31; text-decoration: none; font-weight: bold; }
+
+        /* মোডাল ডিজাইন */
+        #authOverlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(255,255,255,0.98); z-index: 2000; display: flex; 
+            flex-direction: column; justify-content: center; align-items: center; 
+            text-align: center; padding: 20px; box-sizing: border-box; 
+        }
+        .status-modal { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); 
+            justify-content: center; align-items: center; z-index: 3000; 
+        }
+        .modal-box { 
+            background: white; padding: 30px; border-radius: 20px; width: 88%; 
+            max-width: 340px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .home-btn { position: fixed; bottom: 30px; left: 30px; width: 50px; height: 50px; background: #006747; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; text-decoration: none; font-size: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 100; }
     </style>
 </head>
 <body>
@@ -37,27 +86,26 @@
     <div id="authOverlay">
         <img src="favicon.png" width="80" style="margin-bottom: 20px;">
         <h3 style="color: #006747; margin-bottom: 10px;">ভেরিফিকেশন প্রয়োজন</h3>
-        <p style="color: #555; font-size: 14px; margin-bottom: 25px;">অ্যাকাউন্ট খুলতে আপনার গুগল ইমেইল সিলেক্ট করুন।</p>
-        
+        <p style="color: #555; font-size: 16px; margin-bottom: 25px;">অ্যাকাউন্ট খুলতে আপনার গুগল ইমেইল সিলেক্ট করুন।</p>
         <div id="g_id_onload"
-             data-client_id="597064565585-e9kc3a4ovhf6e85fk3r5jmqfsh1er2hr.apps.googleusercontent.com"
+             data-client_id="590447599233-jbv7hmk5bu0g65ae7jpe8d1clecqsetr.apps.googleusercontent.com"
              data-callback="handleCredentialResponse"
              data-auto_prompt="true">
         </div>
-        <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="outline" data-text="continue_with" data-size="large" data-logo_alignment="left"></div>
+        <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="outline" data-size="large"></div>
     </div>
 
     <div class="card" id="signupCard" style="display: none;">
         <h2>নতুন অ্যাকাউন্ট</h2>
-        <p id="userMailInfo" style="font-size: 12px; text-align: center; color: #666; background: #f0f0f0; padding: 5px; border-radius: 5px;"></p>
+        <p id="userMailInfo" style="font-size: 13px; text-align: center; color: #666; background: #f0f0f0; padding: 8px; border-radius: 8px;"></p>
         
         <label>আপনার নাম (বাংলায়)</label>
-        <div class="input-group"><input type="text" id="name" placeholder=" সম্পূর্ণ নাম "></div>
+        <div class="input-group"><input type="text" id="name" placeholder=" যেমন: আমীর হামজা "></div>
 
         <label>ফোন নাম্বার লিখুন</label>
-        <div class="phone-container">
+        <div class="phone-container" id="phoneBox">
             <span class="prefix">+880</span>
-            <input type="text" id="phone" placeholder="১০ ডিজিট লিখুন" maxlength="10">
+            <input type="text" id="phone" placeholder="1XXXXXXXXX" maxlength="10">
         </div>
 
         <label>পাসওয়ার্ড (ঠিক ৬ ডিজিট)</label>
@@ -67,19 +115,20 @@
         </div>
 
         <button class="btn" onclick="handleSignup()">অ্যাকাউন্ট তৈরি করুন</button>
-        <a href="help.html" class="btn-help"><i class="fa-solid fa-circle-info"></i> সহায়তা</a>
+        <a href="help.html" class="btn-help"><i class="fa-solid fa-circle-info"></i> সহায়তা প্রয়োজন?</a>
         <div class="footer-link">ইতিমধ্যে অ্যাকাউন্ট আছে? <a href="login.html">লগইন করুন</a></div>
     </div>
 
-    <a href="index.html" class="home-btn" title="হোমে যান">
-        <i class="fa-solid fa-arrow-left"></i>
-    </a>
+    <a href="index.html" class="home-btn"><i class="fa-solid fa-arrow-left"></i></a>
 
-    <div id="statusModal">
-        <div class="modal-box" id="modalBox">
-            <div id="modalIcon" style="font-size: 50px; margin-bottom: 10px;"></div>
-            <div id="modalText" style="font-size: 18px; font-weight: bold; color: #333;"></div>
-            <button id="okBtn" class="btn" style="margin-top: 20px;" onclick="closeModal()">ঠিক আছে</button>
+    <div id="statusModal" class="status-modal">
+        <div class="modal-box">
+            <div id="modalIcon" style="font-size: 50px; margin-bottom: 15px;"></div>
+            <h3 id="modalTitle" style="margin: 0; color: #333;"></h3>
+            <p id="modalText" style="color: #666; margin-top: 10px;"></p>
+            <div id="modalButtons">
+                <button id="okBtn" class="btn" onclick="closeModal()">ঠিক আছে</button>
+            </div>
         </div>
     </div>
 
@@ -100,82 +149,120 @@
         const db = getFirestore(app);
 
         let selectedEmail = "";
+        let existingUser = null;
 
-        window.handleCredentialResponse = (response) => {
+        // ফোন নাম্বার ভ্যালিডেশন
+        const phoneInput = document.getElementById('phone');
+        phoneInput.addEventListener('input', function() {
+            let val = this.value;
+            let isValid = true;
+
+            if(val.length >= 1 && val[0] !== '1') isValid = false;
+            if(val.length >= 2 && !['3','4','5','6','7','8','9'].includes(val[1])) isValid = false;
+            
+            if(!isValid) {
+                this.classList.add('invalid');
+            } else {
+                this.classList.remove('invalid');
+            }
+        });
+
+        window.handleCredentialResponse = async (response) => {
             const payload = JSON.parse(atob(response.credential.split('.')[1]));
             selectedEmail = payload.email;
             
             if(selectedEmail) {
-                document.getElementById('authOverlay').style.display = 'none';
-                document.getElementById('signupCard').style.display = 'block';
-                document.getElementById('userMailInfo').innerText = "ইমেইল: " + selectedEmail;
+                // ইমেইল চেক
+                const q = query(collection(db, "users"), where("email", "==", selectedEmail));
+                const snap = await getDocs(q);
+
+                if (!snap.empty) {
+                    existingUser = snap.docs[0];
+                    showChoiceModal();
+                } else {
+                    document.getElementById('authOverlay').style.display = 'none';
+                    document.getElementById('signupCard').style.display = 'block';
+                    document.getElementById('userMailInfo').innerText = "ইমেইল: " + selectedEmail;
+                }
             }
         };
 
-        window.togglePassword = function() {
-            const passInput = document.getElementById('pass');
-            const eyeBtn = document.getElementById('togglePass');
-            if (passInput.type === "password") {
-                passInput.type = "text";
-                eyeBtn.classList.replace("fa-eye", "fa-eye-slash");
-            } else {
-                passInput.type = "password";
-                eyeBtn.classList.replace("fa-eye-slash", "fa-eye");
-            }
+        function showChoiceModal() {
+            document.getElementById('modalIcon').innerHTML = '📧';
+            document.getElementById('modalTitle').innerText = "অ্যাকাউন্ট বিদ্যমান!";
+            document.getElementById('modalText').innerText = "এই ইমেইল দ্বারা ইতিমধ্যে অ্যাকাউন্ট রয়েছে। আপনি কি লগইন করতে চান?";
+            document.getElementById('modalButtons').innerHTML = `
+                <button class="btn" onclick="autoLogin()">হ্যাঁ, লগইন করি</button>
+                <button class="btn btn-red" onclick="rejectLogin()">না</button>
+            `;
+            document.getElementById('statusModal').style.display = 'flex';
         }
+
+        window.autoLogin = () => {
+            const data = existingUser.data();
+            localStorage.setItem('userId', existingUser.id);
+            localStorage.setItem('userName', data.name);
+            window.location.href = "index.html";
+        };
+
+        window.rejectLogin = () => {
+            document.getElementById('modalIcon').innerHTML = '❌';
+            document.getElementById('modalTitle').innerText = "নতুন ইমেইল দিন";
+            document.getElementById('modalText').innerText = "নতুন অ্যাকাউন্ট খুলতে এমন ইমেইল ব্যবহার করুন যা পূর্বে ব্যবহার করা হয়নি।";
+            document.getElementById('modalButtons').innerHTML = `<button class="btn" onclick="location.reload()">ঠিক আছে</button>`;
+        };
 
         window.handleSignup = async function() {
             let name = document.getElementById('name').value.trim();
-            let phoneInput = document.getElementById('phone').value.trim();
+            let pVal = phoneInput.value.trim();
             let pass = document.getElementById('pass').value.trim();
-            const fullPhone = "+880" + phoneInput;
+            const fullPhone = "+880" + pVal;
 
-            if (!name || !phoneInput || !pass) { showAlert("⚠️", "সবগুলো ঘর পূরণ করুন"); return; }
-            const banglaRegex = /^[\u0980-\u09FF\s]+$/;
-            if (!banglaRegex.test(name)) { showAlert("⚠️", "নাম অবশ্যই বাংলায় লিখতে হবে"); return; }
-            if (phoneInput.length !== 10) { showAlert("⚠️", "সঠিক ১০ ডিজিট মোবাইল নম্বর দিন"); return; }
-            if (pass.length !== 6) { showAlert("⚠️", "পাসওয়ার্ড ঠিক ৬ ডিজিটের হতে হবে"); return; }
+            if (!name || !pVal || !pass) { showAlert("⚠️", "ভুল", "সবগুলো ঘর পূরণ করুন"); return; }
+            if (phoneInput.classList.contains('invalid') || pVal.length !== 10) { 
+                showAlert("🚫", "সঠিক নম্বর দিন", "ফোন নম্বরের প্রথম ডিজিট ১ এবং দ্বিতীয় ডিজিট ৩-৯ হতে হবে।"); 
+                return; 
+            }
+            if (pass.length !== 6) { showAlert("⚠️", "পাসওয়ার্ড", "পাসওয়ার্ড ঠিক ৬ ডিজিটের হতে হবে"); return; }
 
-            showAlert("⏳", "অ্যাকাউন্ট তৈরি হচ্ছে...", false);
+            showAlert("⏳", "অপেক্ষা করুন", "অ্যাকাউন্ট তৈরি হচ্ছে...", false);
 
             try {
                 const q = query(collection(db, "users"), where("phone", "==", fullPhone));
                 const snap = await getDocs(q);
 
                 if (!snap.empty) {
-                    showAlert("❌", "এই নম্বরে ইতিমধ্যে অ্যাকাউন্ট আছে!");
+                    showAlert("❌", "দুঃখিত", "এই নম্বরে ইতিমধ্যে অ্যাকাউন্ট আছে!");
                 } else {
                     const docRef = await addDoc(collection(db, "users"), { 
-                        name, 
-                        phone: fullPhone, 
-                        pass,
-                        email: selectedEmail,
-                        createdAt: serverTimestamp() 
+                        name, phone: fullPhone, pass, email: selectedEmail, createdAt: serverTimestamp() 
                     });
-                    
-                    // অটো-লগইন এর জন্য ডাটা স্টোর করা
                     localStorage.setItem('userId', docRef.id);
                     localStorage.setItem('userName', name);
-                    localStorage.setItem('userPhone', fullPhone);
-
-                    showAlert("✅", "অ্যাকাউন্ট তৈরি সফল! লগইন হচ্ছে...", false);
+                    showAlert("✅", "সফল", "অ্যাকাউন্ট তৈরি হয়েছে! হোমে যাওয়া হচ্ছে...", false);
                     setTimeout(() => { window.location.href = "index.html"; }, 1500);
                 }
             } catch (e) {
-                showAlert("🚨", "সার্ভারে সমস্যা হচ্ছে!");
+                showAlert("🚨", "ত্রুটি", "সার্ভারে সমস্যা হচ্ছে!");
             }
         }
 
-        function showAlert(icon, msg, showBtn = true) {
+        window.togglePassword = function() {
+            const p = document.getElementById('pass');
+            const e = document.getElementById('togglePass');
+            p.type = p.type === "password" ? "text" : "password";
+            e.classList.toggle('fa-eye-slash');
+        }
+
+        function showAlert(icon, title, msg, showBtn = true) {
             document.getElementById('modalIcon').innerText = icon;
+            document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalText').innerText = msg;
-            document.getElementById('okBtn').style.display = showBtn ? "inline-block" : "none";
+            document.getElementById('modalButtons').innerHTML = showBtn ? `<button class="btn" onclick="closeModal()">ঠিক আছে</button>` : "";
             document.getElementById('statusModal').style.display = 'flex';
         }
 
-        window.closeModal = function() { document.getElementById('statusModal').style.display = 'none'; }
+        window.closeModal = () => document.getElementById('statusModal').style.display = 'none';
     </script>
 </body>
 </html>
-
-
