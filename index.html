@@ -23,7 +23,6 @@
             box-sizing: border-box; position: sticky; top: 0; z-index: 100;
         }
         
-        /* লাল বক্স হেডারের নিচে এবং মাঝে */
         #emailWarningBar {
             display: none; width: 90%; max-width: 380px; background: rgba(224, 60, 49, 0.9);
             color: white; text-align: center; padding: 10px; font-size: 12px;
@@ -46,19 +45,20 @@
         .hero p { color: #666; font-size: 13px; margin-top: 0; }
 
         .main-container {
-            display: flex; flex-direction: column; align-items: center; gap: 15px;
-            width: 100%; max-width: 400px; padding: 0 20px; margin-top: -5px; position: relative; flex-grow: 1;
+            display: flex; flex-direction: column; align-items: center; gap: 20px;
+            width: 100%; max-width: 400px; padding: 0 40px; margin-top: 5px; position: relative; flex-grow: 1;
         }
 
+        /* কার্ডের ডিজাইন পরিবর্তন (বড় এবং মোবাইল ফ্রেন্ডলি) */
         .action-card {
-            width: 100%; background: white; padding: 20px; border-radius: 15px;
+            width: 90%; background: white; padding: 40px 20px; border-radius: 20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.06); text-align: center;
             cursor: pointer; transition: 0.3s; text-decoration: none; border: 1px solid #eee;
         }
-        .action-card:active { transform: scale(0.98); }
-        .action-card i { font-size: 35px; margin-bottom: 10px; }
-        .action-card h3 { margin: 5px 0; color: #333; font-size: 16px; }
-        .action-card p { color: #777; font-size: 12px; margin: 0; }
+        .action-card:active { transform: scale(0.96); }
+        .action-card i { font-size: 45px; margin-bottom: 15px; }
+        .action-card h3 { margin: 8px 0; color: #333; font-size: 18px; }
+        .action-card p { color: #777; font-size: 13px; margin: 0; }
 
         .bottom-links { position: fixed; bottom: 10px; left: 10px; z-index: 10; display: flex; align-items: center; gap: 10px; }
         .admin-link { opacity: 0.2; transition: 0.3s; }
@@ -101,13 +101,13 @@
     </div>
 
     <div class="main-container">
-        <div class="action-card" onclick="handleAction('buy.html')" style="border-left: 5px solid #006747;">
+        <div class="action-card" onclick="handleAction('buy.html')" style="border-left: 6px solid #006747;">
             <i class="fa-solid fa-book-open" style="color: #006747;"></i>
             <h3>বই কিনুন (Buy)</h3>
-            <p>আপনার প্রয়োজনীয় পুরাতন বইগুলো এখান থেকে খুঁজুন</p>
+            <p>প্রয়োজনীয় পুরাতন বইগুলো এখান থেকে খুঁজুন</p>
         </div>
 
-        <div class="action-card" onclick="handleAction('sell.html')" style="border-left: 5px solid #E03C31;">
+        <div class="action-card" onclick="handleAction('sell.html')" style="border-left: 6px solid #E03C31;">
             <i class="fa-solid fa-book-open" style="color: #E03C31;"></i>
             <h3>বই বিক্রি (Sell)</h3>
             <p>আপনার পুরাতন বইয়ের বিজ্ঞাপন দিন একদম ফ্রিতে</p>
@@ -150,7 +150,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, onSnapshot, updateDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDbtD45rBSZN5RUXCHijFiabZ0uKPYeya0",
@@ -192,19 +192,27 @@
             }
         };
 
-        // গুগল থেকে ইমেইল পাওয়ার পর যা হবে
         window.handleGoogleResponse = async (response) => {
             const responsePayload = decodeJwtResponse(response.credential);
             const selectedEmail = responsePayload.email;
 
             if (selectedEmail) {
                 try {
+                    // ডুপ্লিকেট ইমেইল চেক
+                    const q = query(collection(db, "users"), where("email", "==", selectedEmail));
+                    const querySnapshot = await getDocs(q);
+                    
+                    if (!querySnapshot.empty) {
+                        alert("এই ইমেইল দ্বারা ইতিমধ্যে অ্যাকাউন্ট রয়েছে, অন্য ইমেইল ব্যবহার করুন।");
+                        return;
+                    }
+
                     const userRef = doc(db, "users", currentUserId);
                     await updateDoc(userRef, { email: selectedEmail });
-                    alert("ইমেইল ভেরিফিকেশন সফল হয়েছে: " + selectedEmail);
+                    alert("ইমেইল সফলভাবে আপডেট হয়েছে!");
                     closeModals();
                 } catch (e) {
-                    alert("ডাটাবেজ আপডেটে সমস্যা হয়েছে।");
+                    alert("সমস্যা হয়েছে, আবার চেষ্টা করুন।");
                 }
             }
         };
@@ -238,5 +246,3 @@
     </script>
 </body>
 </html>
-
-
