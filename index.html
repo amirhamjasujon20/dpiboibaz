@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>হোম পেজ - DPI Boi Baz </title>
+    <title>হোম পেজ - DPI Boi Baz</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="manifest" href="manifest.json">
-    <link rel="canonical" href="https://dpiboibaz.netlify.app/" />
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         body { 
             font-family: 'Arial', sans-serif; 
             margin: 0; padding: 0;
             background: radial-gradient(circle, rgba(224, 60, 49, 0.05) 20%, rgba(0, 103, 71, 0.05) 100%);
             display: flex; flex-direction: column; align-items: center; min-height: 100vh;
-            overflow-x: hidden;
         }
 
         header {
@@ -22,53 +21,33 @@
             box-sizing: border-box; position: sticky; top: 0; z-index: 100;
         }
         
-        /* ইমেইল ভেরিফিকেশন বার */
+        /* লাল বক্স হেডারের নিচে এবং মাঝে */
         #emailWarningBar {
-            display: none; width: 100%; background: rgba(224, 60, 49, 0.9);
-            color: white; text-align: center; padding: 8px; font-size: 12px;
-            cursor: pointer; font-weight: bold; animation: pulse 2s infinite;
+            display: none; width: 90%; max-width: 380px; background: rgba(224, 60, 49, 0.9);
+            color: white; text-align: center; padding: 10px; font-size: 13px;
+            margin-top: 10px; border-radius: 8px; cursor: pointer; font-weight: bold;
+            box-shadow: 0 4px 10px rgba(224, 60, 49, 0.3); z-index: 90;
         }
-        @keyframes pulse { 0% {opacity: 1;} 50% {opacity: 0.7;} 100% {opacity: 1;} }
 
         .logo-section { display: flex; align-items: center; gap: 8px; cursor: pointer; text-decoration: none; color: white; }
         .logo-img { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid white; background: white; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .logo-img img { width: 100%; height: 100%; object-fit: cover; }
-        .logo-text { font-size: 14px; font-weight: bold; letter-spacing: 0.5px; }
+        .logo-text { font-size: 14px; font-weight: bold; }
 
         .user-profile { display: flex; align-items: center; gap: 8px; cursor: pointer; text-decoration: none; color: white; }
-        .user-name { font-size: 13px; font-weight: bold; }
-        .user-avatar { width: 32px; height: 32px; background: #E03C31; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 16px; border: 2px solid white; }
-
-        .hero { text-align: center; padding: 20px 20px 10px 20px; width: 100%; box-sizing: border-box; }
-        .hero h1 { color: #006747; font-size: 18px; margin-bottom: 5px; }
-        .hero p { color: #666; font-size: 13px; margin-top: 0; }
+        .user-avatar { width: 32px; height: 32px; background: #E03C31; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; border: 2px solid white; }
 
         .main-container {
             display: flex; flex-direction: column; align-items: center; gap: 15px;
-            width: 100%; max-width: 400px; padding: 0 20px; margin-top: -5px; position: relative; flex-grow: 1;
+            width: 100%; max-width: 400px; padding: 20px; flex-grow: 1;
         }
 
         .action-card {
             width: 100%; background: white; padding: 20px; border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.06); text-align: center;
-            cursor: pointer; transition: 0.3s; text-decoration: none; border: 1px solid #eee;
+            cursor: pointer; border: 1px solid #eee; box-sizing: border-box;
         }
-        .action-card:active { transform: scale(0.98); }
-        .action-card i { font-size: 35px; margin-bottom: 10px; }
-        .action-card h3 { margin: 5px 0; color: #333; font-size: 16px; }
-        .action-card p { color: #777; font-size: 12px; margin: 0; }
-
-        /* বটম বাটন সেকশন */
-        .bottom-links { position: fixed; bottom: 10px; left: 10px; z-index: 10; display: flex; align-items: center; gap: 10px; }
-        .admin-link { opacity: 0.2; transition: 0.3s; }
-        .admin-link:hover { opacity: 1; }
-        .btn-bottom { 
-            display: inline-block; padding: 5px 10px; color: #999; 
-            text-decoration: none; font-size: 10px; font-weight: bold;
-            border-radius: 5px; background: rgba(0,0,0,0.03);
-        }
-        .visible-link { opacity: 0.8; color: #006747; border: 1px solid rgba(0, 103, 71, 0.2); }
-
+        
         /* মোডাল স্টাইল */
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -76,16 +55,12 @@
             justify-content: center; align-items: center; z-index: 1000;
         }
         .modal-box { background: white; padding: 25px; border-radius: 20px; text-align: center; width: 85%; max-width: 320px; }
-        .btn-red { background: #E03C31; color: white; padding: 10px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
+        .btn-red { background: #E03C31; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
         .btn-gray { background: #f0f0f0; color: #666; padding: 10px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
-        
-        input#verifyEmailInput { width: 100%; padding: 12px; margin-top: 10px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-
-    <div id="emailWarningBar" onclick="showEmailModal()">⚠️ আপনার ইমেইল ভেরিফিকেশন করুন (এখানে ক্লিক করুন)</div>
 
     <header>
         <a href="about.html" class="logo-section">
@@ -95,53 +70,38 @@
         <div id="authSection"></div>
     </header>
 
-    <div class="hero">
-        <h1 id="welcomeTitle">স্বাগতম...</h1>
-        <p>আপনার প্রয়োজনীয় পুরাতন বই খুঁজে নিন অথবা বিক্রি করুন</p>
+    <div id="emailWarningBar" onclick="showEmailModal()">
+        <i class="fa-solid fa-triangle-exclamation"></i> ইমেইল ভেরিফিকেশন প্রয়োজন
     </div>
 
     <div class="main-container">
         <div class="action-card" onclick="handleAction('buy.html')" style="border-left: 5px solid #006747;">
-            <i class="fa-solid fa-book-open" style="color: #006747;"></i>
+            <i class="fa-solid fa-book-open" style="font-size: 35px; color: #006747;"></i>
             <h3>বই কিনুন (Buy)</h3>
-            <p>আপনার প্রয়োজনীয় পুরাতন বইগুলো এখান থেকে খুঁজুন</p>
+            <p style="font-size: 12px; color: #777;">প্রয়োজনীয় পুরাতন বই খুঁজুন</p>
         </div>
 
         <div class="action-card" onclick="handleAction('sell.html')" style="border-left: 5px solid #E03C31;">
-            <i class="fa-solid fa-book-open" style="color: #E03C31;"></i>
+            <i class="fa-solid fa-tag" style="font-size: 35px; color: #E03C31;"></i>
             <h3>বই বিক্রি (Sell)</h3>
-            <p>আপনার পুরাতন বইয়ের বিজ্ঞাপন দিন একদম ফ্রিতে</p>
-        </div>
-
-        <div class="bottom-links">
-            <div class="admin-link"><a href="admin.html" class="btn-bottom">Admin</a></div>
-            <a href="about.html" class="btn-bottom visible-link">About</a>
-        </div>
-    </div>
-
-    <div id="loginAlertModal" class="modal">
-        <div class="modal-box">
-            <i class="fa-solid fa-lock" style="font-size: 40px; color: #E03C31; margin-bottom: 15px;"></i>
-            <h3>লগইন প্রয়োজন!</h3>
-            <p>বই কেনা বা বিক্রি করতে হলে আগে আপনার অ্যাকাউন্টে লগইন করতে হবে।</p>
-            <button class="btn-red" onclick="window.location.href='login.html'">লগইন করতে যান</button>
-            <p onclick="closeModals()" style="margin-top:15px; font-size:12px; color:#999; cursor:pointer;">পরে করবো</p>
+            <p style="font-size: 12px; color: #777;">পুরাতন বইয়ের বিজ্ঞাপন দিন</p>
         </div>
     </div>
 
     <div id="emailVerifyModal" class="modal">
         <div class="modal-box">
-            <i class="fa-solid fa-envelope-circle-check" style="font-size: 40px; color: #E03C31; margin-bottom: 15px;"></i>
-            <h3 id="modalHead">ইমেইল ভেরিফিকেশন</h3>
-            <p id="modalSubText">নিরাপত্তার স্বার্থে বেচা-কেনার পূর্বে আপনার ইমেইল যুক্ত করুন।</p>
-            <div id="emailInputArea" style="display:none;">
-                <input type="email" id="verifyEmailInput" placeholder="আপনার ইমেইল দিন (example@gmail.com)">
-                <button class="btn-red" onclick="saveEmailToDB()">ইমেইল সেভ করুন</button>
+            <i class="fa-solid fa-envelope-open-text" style="font-size: 40px; color: #E03C31; margin-bottom: 15px;"></i>
+            <h3>ইমেইল যুক্ত করুন</h3>
+            <p style="font-size: 14px; color: #555;">নিরাপদ কেনাবেচার জন্য আপনার গুগল ইমেইলটি ভেরিফাই করুন।</p>
+            
+            <div id="g_id_onload"
+                 data-client_id="597064565585-e9kc3a4ovhf6e85fk3r5jmqfsh1er2hr.apps.googleusercontent.com"
+                 data-callback="handleCredentialResponse"
+                 data-auto_prompt="false">
             </div>
-            <div id="modalButtons">
-                <button class="btn-red" onclick="startEmailEntry()">এখনই করুন</button>
-                <button class="btn-gray" onclick="closeModals()">পরে করুন</button>
-            </div>
+
+            <button class="btn-red" onclick="triggerGoogleSignIn()">এখনই করুন</button>
+            <button class="btn-gray" onclick="closeModals()">পরে করুন</button>
         </div>
     </div>
 
@@ -168,14 +128,11 @@
                 onSnapshot(doc(db, "users", currentUserId), (docSnap) => {
                     if (docSnap.exists()) {
                         const userData = docSnap.data();
-                        document.getElementById('welcomeTitle').innerText = `স্বাগতম, ${userData.name}`;
                         document.getElementById('authSection').innerHTML = `
-                            <a href="edit.html" class="user-profile">
-                                <span class="user-name">${userData.name}</span>
+                            <div class="user-profile">
                                 <div class="user-avatar">${userData.name.charAt(0)}</div>
-                            </a>`;
+                            </div>`;
                         
-                        // ইমেইল চেক
                         if (!userData.email || userData.email === "") {
                             hasEmail = false;
                             document.getElementById('emailWarningBar').style.display = 'block';
@@ -186,13 +143,13 @@
                     }
                 });
             } else {
-                document.getElementById('authSection').innerHTML = `<a href="login.html" style="color:white; text-decoration:none; font-weight:bold; font-size:13px;">লগইন করুন</a>`;
+                document.getElementById('authSection').innerHTML = `<a href="login.html" style="color:white; text-decoration:none; font-size:13px;">লগইন</a>`;
             }
         };
 
         window.handleAction = (page) => {
             if (!currentUserId) {
-                document.getElementById('loginAlertModal').style.display = 'flex';
+                window.location.href = 'login.html';
             } else if (!hasEmail) {
                 document.getElementById('emailVerifyModal').style.display = 'flex';
             } else {
@@ -200,37 +157,29 @@
             }
         };
 
-        window.showEmailModal = () => {
-            document.getElementById('emailVerifyModal').style.display = 'flex';
+        window.showEmailModal = () => { document.getElementById('emailVerifyModal').style.display = 'flex'; };
+        window.closeModals = () => { document.getElementById('emailVerifyModal').style.display = 'none'; };
+
+        // গুগল সাইন-ইন ট্রিগার
+        window.triggerGoogleSignIn = () => {
+            google.accounts.id.prompt();
         };
 
-        window.startEmailEntry = () => {
-            document.getElementById('emailInputArea').style.display = 'block';
-            document.getElementById('modalButtons').style.display = 'none';
-            document.getElementById('modalHead').innerText = "আপনার ইমেইল লিখুন";
-        };
+        // গুগল থেকে ইমেইল পাওয়ার পর ডাটাবেজ আপডেট
+        window.handleCredentialResponse = async (response) => {
+            const payload = JSON.parse(atob(response.credential.split('.')[1]));
+            const email = payload.email;
 
-        window.saveEmailToDB = async () => {
-            const email = document.getElementById('verifyEmailInput').value.trim();
-            if (email.includes("@") && email.includes(".")) {
+            if (email) {
                 try {
                     const userRef = doc(db, "users", currentUserId);
                     await updateDoc(userRef, { email: email });
-                    alert("ইমেইল সফলভাবে আপডেট হয়েছে!");
+                    alert("ইমেইল সফলভাবে ভেরিফাই হয়েছে!");
                     closeModals();
                 } catch (e) {
-                    alert("সমস্যা হয়েছে, আবার চেষ্টা করুন।");
+                    alert("Error: " + e.message);
                 }
-            } else {
-                alert("সঠিক ইমেইল ঠিকানা দিন।");
             }
-        };
-
-        window.closeModals = () => {
-            document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
-            // রিসেট মোডাল স্টেট
-            document.getElementById('emailInputArea').style.display = 'none';
-            document.getElementById('modalButtons').style.display = 'block';
         };
     </script>
 </body>
