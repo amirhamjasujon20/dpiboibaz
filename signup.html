@@ -31,17 +31,15 @@
         }
         input:focus { border-color: #006747; background: #f0fdf4; }
         
-      /* ফোন নম্বর এরর স্টাইল - এটি আপডেট করা হয়েছে */
-.invalid-box { 
-    border: 2px solid #E03C31 !important; 
-    background: #fff5f5 !important; 
-}
+        /* ফোন নম্বর কন্টেইনার এরর স্টাইল */
+        .invalid-box { border: 2px solid #E03C31 !important; background: #fff5f5 !important; }
 
         .eye-btn { position: absolute; right: 12px; cursor: pointer; color: #888; font-size: 18px; }
         
         .phone-container { 
             display: flex; align-items: center; background: #f9f9f9; 
             border: 1px solid #ccc; border-radius: 10px; overflow: hidden; margin-top: 5px; 
+            transition: 0.3s;
         }
         .prefix { background: #eee; padding: 12px; color: #555; font-weight: bold; border-right: 1px solid #ccc; }
         .phone-container input { border: none; flex: 1; background: transparent; }
@@ -65,7 +63,6 @@
         .footer-link { margin-top: 15px; font-size: 14px; text-align: center; color: #666; }
         .footer-link a { color: #E03C31; text-decoration: none; font-weight: bold; }
 
-        /* মোডাল ডিজাইন */
         #authOverlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(255,255,255,0.98); z-index: 2000; display: flex; 
@@ -154,36 +151,30 @@
         let selectedEmail = "";
         let existingUser = null;
 
-     // ফোন নম্বর ভ্যালিডেশন আপডেট
-const phoneInput = document.getElementById('phone');
-const phoneBox = document.getElementById('phoneBox'); // পুরো কন্টেইনার ধরলাম
+        const phoneInput = document.getElementById('phone');
+        const phoneBox = document.getElementById('phoneBox');
 
-phoneInput.addEventListener('input', function() {
-    let val = this.value;
-    let isValid = true;
+        // ফোন নাম্বার রিয়েল-টাইম ভ্যালিডেশন
+        phoneInput.addEventListener('input', function() {
+            let val = this.value;
+            let isValid = true;
 
-    // ১. প্রথম অক্ষর ১ হতে হবে
-    if(val.length >= 1 && val[0] !== '1') isValid = false;
-    
-    // ২. দ্বিতীয় অক্ষর ৩-৯ এর মধ্যে হতে হবে
-    if(val.length >= 2 && !['3','4','5','6','7','8','9'].includes(val[1])) isValid = false;
-    
-    // ৩. শুধুমাত্র নম্বর হতে হবে
-    if(val.length > 0 && isNaN(val)) isValid = false;
-
-    if(!isValid) {
-        phoneBox.classList.add('invalid-box'); // পুরো বক্স লাল হবে
-    } else {
-        phoneBox.classList.remove('invalid-box'); // সঠিক হলে লাল চলে যাবে
-    }
-});
+            if(val.length >= 1 && val[0] !== '1') isValid = false;
+            if(val.length >= 2 && !['3','4','5','6','7','8','9'].includes(val[1])) isValid = false;
+            if(val.length > 0 && isNaN(val)) isValid = false;
+            
+            if(!isValid) {
+                phoneBox.classList.add('invalid-box');
+            } else {
+                phoneBox.classList.remove('invalid-box');
+            }
+        });
 
         window.handleCredentialResponse = async (response) => {
             const payload = JSON.parse(atob(response.credential.split('.')[1]));
             selectedEmail = payload.email;
             
             if(selectedEmail) {
-                // ইমেইল চেক
                 const q = query(collection(db, "users"), where("email", "==", selectedEmail));
                 const snap = await getDocs(q);
 
@@ -230,10 +221,13 @@ phoneInput.addEventListener('input', function() {
             const fullPhone = "+880" + pVal;
 
             if (!name || !pVal || !pass) { showAlert("⚠️", "ভুল", "সবগুলো ঘর পূরণ করুন"); return; }
-            if (phoneInput.classList.contains('invalid') || pVal.length !== 10) { 
+            
+            // ফোন নম্বর লাল থাকলে বা ১০ ডিজিট না হলে বাধা দিবে
+            if (phoneBox.classList.contains('invalid-box') || pVal.length !== 10) { 
                 showAlert("🚫", "সঠিক নম্বর দিন", "ফোন নম্বরের প্রথম ডিজিট ১ এবং দ্বিতীয় ডিজিট ৩-৯ হতে হবে।"); 
                 return; 
             }
+            
             if (pass.length !== 6) { showAlert("⚠️", "পাসওয়ার্ড", "পাসওয়ার্ড ঠিক ৬ ডিজিটের হতে হবে"); return; }
 
             showAlert("⏳", "অপেক্ষা করুন", "অ্যাকাউন্ট তৈরি হচ্ছে...", false);
@@ -277,4 +271,3 @@ phoneInput.addEventListener('input', function() {
     </script>
 </body>
 </html>
-
