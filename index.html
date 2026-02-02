@@ -23,13 +23,15 @@
             box-sizing: border-box; position: sticky; top: 0; z-index: 100;
         }
         
+        /* লাল বক্স - আরও বড় এবং আকর্ষণীয় করা হয়েছে */
         #emailWarningBar {
-            display: none; width: 90%; max-width: 380px; background: rgba(224, 60, 49, 0.9);
-            color: white; text-align: center; padding: 10px; font-size: 12px;
-            cursor: pointer; font-weight: bold; border-radius: 0 0 15px 15px;
-            margin: 0 auto; z-index: 99; animation: pulse 2s infinite;
+            display: none; width: 95%; max-width: 400px; background: #E03C31;
+            color: white; text-align: center; padding: 15px 10px; font-size: 14px;
+            cursor: pointer; font-weight: bold; border-radius: 0 0 20px 20px;
+            margin: 0 auto; z-index: 99; animation: pulse 1.5s infinite;
+            box-shadow: 0 4px 10px rgba(224, 60, 49, 0.3);
         }
-        @keyframes pulse { 0% {opacity: 1;} 50% {opacity: 0.8;} 100% {opacity: 1;} }
+        @keyframes pulse { 0% {transform: scale(1);} 50% {transform: scale(0.98); opacity: 0.9;} 100% {transform: scale(1);} }
 
         .logo-section { display: flex; align-items: center; gap: 8px; cursor: pointer; text-decoration: none; color: white; }
         .logo-img { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid white; background: white; overflow: hidden; display: flex; align-items: center; justify-content: center; }
@@ -46,19 +48,20 @@
 
         .main-container {
             display: flex; flex-direction: column; align-items: center; gap: 20px;
-            width: 100%; max-width: 400px; padding: 0 40px; margin-top: 5px; position: relative; flex-grow: 1;
+            width: 100%; max-width: 400px; padding: 0 40px; margin-top: 10px; position: relative; flex-grow: 1;
+            box-sizing: border-box;
         }
 
-        /* কার্ডের ডিজাইন পরিবর্তন (বড় এবং মোবাইল ফ্রেন্ডলি) */
+        /* বক্সগুলো ডানে-বামে ছোট এবং উপর-নিচে বড় করা হয়েছে */
         .action-card {
-            width: 90%; background: white; padding: 40px 20px; border-radius: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.06); text-align: center;
+            width: 100%; background: white; padding: 35px 20px; border-radius: 20px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.07); text-align: center;
             cursor: pointer; transition: 0.3s; text-decoration: none; border: 1px solid #eee;
         }
-        .action-card:active { transform: scale(0.96); }
-        .action-card i { font-size: 45px; margin-bottom: 15px; }
+        .action-card:active { transform: scale(0.95); }
+        .action-card i { font-size: 40px; margin-bottom: 15px; }
         .action-card h3 { margin: 8px 0; color: #333; font-size: 18px; }
-        .action-card p { color: #777; font-size: 13px; margin: 0; }
+        .action-card p { color: #777; font-size: 12px; margin: 0; line-height: 1.4; }
 
         .bottom-links { position: fixed; bottom: 10px; left: 10px; z-index: 10; display: flex; align-items: center; gap: 10px; }
         .admin-link { opacity: 0.2; transition: 0.3s; }
@@ -101,13 +104,13 @@
     </div>
 
     <div class="main-container">
-        <div class="action-card" onclick="handleAction('buy.html')" style="border-left: 6px solid #006747;">
+        <div class="action-card" onclick="handleAction('buy.html')" style="border-left: 8px solid #006747;">
             <i class="fa-solid fa-book-open" style="color: #006747;"></i>
             <h3>বই কিনুন (Buy)</h3>
-            <p>প্রয়োজনীয় পুরাতন বইগুলো এখান থেকে খুঁজুন</p>
+            <p>আপনার প্রয়োজনীয় পুরাতন বইগুলো এখান থেকে খুঁজুন</p>
         </div>
 
-        <div class="action-card" onclick="handleAction('sell.html')" style="border-left: 6px solid #E03C31;">
+        <div class="action-card" onclick="handleAction('sell.html')" style="border-left: 8px solid #E03C31;">
             <i class="fa-solid fa-book-open" style="color: #E03C31;"></i>
             <h3>বই বিক্রি (Sell)</h3>
             <p>আপনার পুরাতন বইয়ের বিজ্ঞাপন দিন একদম ফ্রিতে</p>
@@ -199,9 +202,10 @@
             if (selectedEmail) {
                 try {
                     // ডুপ্লিকেট ইমেইল চেক
-                    const q = query(collection(db, "users"), where("email", "==", selectedEmail));
+                    const usersRef = collection(db, "users");
+                    const q = query(usersRef, where("email", "==", selectedEmail));
                     const querySnapshot = await getDocs(q);
-                    
+
                     if (!querySnapshot.empty) {
                         alert("এই ইমেইল দ্বারা ইতিমধ্যে অ্যাকাউন্ট রয়েছে, অন্য ইমেইল ব্যবহার করুন।");
                         return;
@@ -209,10 +213,10 @@
 
                     const userRef = doc(db, "users", currentUserId);
                     await updateDoc(userRef, { email: selectedEmail });
-                    alert("ইমেইল সফলভাবে আপডেট হয়েছে!");
+                    alert("ইমেইল সফলভাবে ভেরিফাই ও আপডেট হয়েছে!");
                     closeModals();
                 } catch (e) {
-                    alert("সমস্যা হয়েছে, আবার চেষ্টা করুন।");
+                    alert("সমস্যা হয়েছে, আবার চেষ্টা করুন।");
                 }
             }
         };
