@@ -31,8 +31,11 @@
         }
         input:focus { border-color: #006747; background: #f0fdf4; }
         
-        /* ফোন নম্বর এরর স্টাইল */
-        input.invalid { border: 2px solid #E03C31; background: #fff5f5; }
+      /* ফোন নম্বর এরর স্টাইল - এটি আপডেট করা হয়েছে */
+.invalid-box { 
+    border: 2px solid #E03C31 !important; 
+    background: #fff5f5 !important; 
+}
 
         .eye-btn { position: absolute; right: 12px; cursor: pointer; color: #888; font-size: 18px; }
         
@@ -151,21 +154,29 @@
         let selectedEmail = "";
         let existingUser = null;
 
-        // ফোন নাম্বার ভ্যালিডেশন
-        const phoneInput = document.getElementById('phone');
-        phoneInput.addEventListener('input', function() {
-            let val = this.value;
-            let isValid = true;
+     // ফোন নম্বর ভ্যালিডেশন আপডেট
+const phoneInput = document.getElementById('phone');
+const phoneBox = document.getElementById('phoneBox'); // পুরো কন্টেইনার ধরলাম
 
-            if(val.length >= 1 && val[0] !== '1') isValid = false;
-            if(val.length >= 2 && !['3','4','5','6','7','8','9'].includes(val[1])) isValid = false;
-            
-            if(!isValid) {
-                this.classList.add('invalid');
-            } else {
-                this.classList.remove('invalid');
-            }
-        });
+phoneInput.addEventListener('input', function() {
+    let val = this.value;
+    let isValid = true;
+
+    // ১. প্রথম অক্ষর ১ হতে হবে
+    if(val.length >= 1 && val[0] !== '1') isValid = false;
+    
+    // ২. দ্বিতীয় অক্ষর ৩-৯ এর মধ্যে হতে হবে
+    if(val.length >= 2 && !['3','4','5','6','7','8','9'].includes(val[1])) isValid = false;
+    
+    // ৩. শুধুমাত্র নম্বর হতে হবে
+    if(val.length > 0 && isNaN(val)) isValid = false;
+
+    if(!isValid) {
+        phoneBox.classList.add('invalid-box'); // পুরো বক্স লাল হবে
+    } else {
+        phoneBox.classList.remove('invalid-box'); // সঠিক হলে লাল চলে যাবে
+    }
+});
 
         window.handleCredentialResponse = async (response) => {
             const payload = JSON.parse(atob(response.credential.split('.')[1]));
@@ -266,3 +277,4 @@
     </script>
 </body>
 </html>
+
