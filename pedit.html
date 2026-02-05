@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>প্রোফাইল এডিট - DPI Boi Baz</title>
+    <link href="https://fonts.cdnfonts.com/css/solaimanlipi" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="favicon.png">
+<style>
+        :root { --primary-color: #006747; --danger-color: #E03C31; }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'SolaimanLipi', sans-serif;
+            background: #f0f4f2;
+            display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        header {
+            width: 100%; background: var(--primary-color); color: white;
+            padding: 15px 20px; display: flex; justify-content: space-between;
+            position: sticky; top: 0; z-index: 100;
+        }
+
+footer { margin-top: auto; padding: 20px; font-size: 13px; color: #888; text-align: center; width: 100%; }
+
+        .container { width: 90%; max-width: 400px; margin-top: 30px; padding-bottom: 50px; }
+
+        .card {
+            background: white; padding: 25px; border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            opacity: 0; transform: translateX(-50px); animation: slideIn 0.6s forwards;
+        }
+
+        @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
+
+        h2 { color: var(--primary-color); margin-bottom: 20px; font-size: 22px; text-align: center; }
+
+        .input-group { margin-bottom: 20px; opacity: 0; transform: translateX(-30px); }
+        .in-1 { animation: slideIn 0.5s forwards 0.2s; }
+        .in-2 { animation: slideIn 0.5s forwards 0.4s; }
+
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: #555; font-size: 14px; }
+        
+        input {
+            width: 100%; padding: 12px 15px; border: 1.5px solid #ddd;
+            border-radius: 10px; font-family: inherit; font-size: 15px;
+            transition: 0.3s; outline: none;
+        }
+
+        input:focus { border-color: var(--primary-color); box-shadow: 0 0 8px rgba(0,103,71,0.1); }
+        
+        input:disabled { background: #f9f9f9; color: #999; cursor: not-allowed; }
+
+        .btn-update {
+            width: 100%; background: var(--primary-color); color: white;
+            padding: 14px; border: none; border-radius: 12px;
+            font-size: 16px; font-weight: bold; cursor: pointer;
+            margin-top: 10px; transition: 0.3s;
+            opacity: 0; transform: translateX(-30px); animation: slideIn 0.5s forwards 0.6s;
+        }
+
+        .btn-update:active { transform: scale(0.98); }
+
+        .note {
+            margin-top: 25px; font-size: 13px; color: #666; text-align: center;
+            opacity: 0; animation: fadeIn 1s forwards 0.8s;
+        }
+
+        .whatsapp-link {
+            display: inline-flex; align-items: center; gap: 5px;
+            color: #25D366; text-decoration: none; font-weight: bold;
+        }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        /* পপআপ স্টাইল */
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 999; }
+        #msgBox {
+            position: fixed; top: 30%; left: 50%; transform: translate(-50%, -50%);
+            background: white; padding: 25px; border-radius: 15px; width: 80%; max-width: 300px;
+            text-align: center; z-index: 1000; display: none;
+        }
+
+        .fixed-back {
+            position: fixed; bottom: 20px; left: 20px;
+            width: 45px; height: 45px; background: var(--primary-color);
+            color: white; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <span>DPI</span>
+        <span>Boi Baz</span>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>প্রোফাইল আপডেট</h2>
+            
+            <div class="input-group in-1">
+                <label>আপনার নাম</label>
+                <input type="text" id="newName" placeholder="নাম লিখুন">
+            </div>
+
+            <div class="input-group in-2">
+                <label>নতুন পাসওয়ার্ড (৬ ডিজিট)</label>
+                <input type="number" id="newPass" placeholder="******" oninput="if(this.value.length > 6) this.value = this.value.slice(0,6);">
+            </div>
+
+            <button class="btn-update" onclick="updateProfile()">তথ্য আপডেট করুন</button>
+
+            <div class="note">
+                বি: দ্র: ফোন নাম্বার পরিবর্তনের জন্য অ্যাডমিন এর সাথে যোগাযোগ করুন। 
+                <br><br>
+                <a href="https://wa.me/8801571067027" class="whatsapp-link">
+                    <i class="fa-brands fa-whatsapp"></i> যোগাযোগ করুন
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <a href="edit.html" class="fixed-back"><i class="fa-solid fa-arrow-left"></i></a>
+
+    <div class="overlay" id="overlay"></div>
+    <div id="msgBox">
+        <h3 id="msgTitle">সফল!</h3>
+        <p id="msgText" style="margin: 15px 0; color: #555;"></p>
+        <button onclick="closeMsg()" style="background: var(--primary-color); color: white; border: none; padding: 10px 20px; border-radius: 8px; width: 100%;">ঠিক আছে</button>
+    </div>
+
+   <footer>© 2026 DPI Boi Baz | Created by A.H. SUJON</footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, getDoc, updateDoc, collection, query, where, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDbtD45rBSZN5RUXCHijFiabZ0uKPYeya0",
+            authDomain: "boi-baz.firebaseapp.com",
+            projectId: "boi-baz",
+            storageBucket: "boi-baz.firebasestorage.app",
+            messagingSenderId: "590447599233",
+            appId: "1:590447599233:web:c969d315d5d4f2b3f87780"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const userId = localStorage.getItem('userId');
+
+        if (!userId) window.location.href = "login.html";
+
+        // বর্তমান ডাটা লোড করা
+        async function loadCurrentData() {
+            const snap = await getDoc(doc(db, "users", userId));
+            if (snap.exists()) {
+                const data = snap.data();
+                document.getElementById('newName').value = data.name;
+                document.getElementById('newPass').value = data.pass;
+            }
+        }
+
+        window.updateProfile = async () => {
+            const name = document.getElementById('newName').value.trim();
+            const pass = document.getElementById('newPass').value;
+
+            if (name === "" || pass === "") {
+                showMsg("ভুল!", "সবগুলো ঘর পূরণ করুন।", true);
+                return;
+            }
+
+            if (pass.length !== 6) {
+                showMsg("ভুল!", "পাসওয়ার্ড অবশ্যই ৬ ডিজিটের হতে হবে।", true);
+                return;
+            }
+
+            try {
+                // ১. ইউজার প্রোফাইল আপডেট
+                await updateDoc(doc(db, "users", userId), {
+                    name: name,
+                    pass: pass
+                });
+
+                // ২. বইয়ের তথ্য আপডেট (যেখানে userID মিলে যায়)
+                const q = query(collection(db, "books"), where("sellerId", "==", userId));
+                const querySnapshot = await getDocs(q);
+                const batch = writeBatch(db);
+
+                querySnapshot.forEach((bookDoc) => {
+                    batch.update(bookDoc.ref, { sellerName: name });
+                });
+
+                await batch.commit();
+
+                showMsg("সফল!", "আপনার প্রোফাইল এবং বইয়ের তথ্য আপডেট হয়েছে।");
+            } catch (e) {
+                showMsg("ত্রুটি!", "আপডেট করতে সমস্যা হয়েছে।", true);
+            }
+        };
+
+        function showMsg(title, text, isError = false) {
+            document.getElementById('msgTitle').innerText = title;
+            document.getElementById('msgTitle').style.color = isError ? "red" : "#006747";
+            document.getElementById('msgText').innerText = text;
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('msgBox').style.display = 'block';
+        }
+
+        window.closeMsg = () => {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('msgBox').style.display = 'none';
+        };
+
+        loadCurrentData();
+    </script>
+</body>
+</html>
