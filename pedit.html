@@ -24,57 +24,60 @@
             position: sticky; top: 0; z-index: 100;
         }
 
-        .container { width: 92%; max-width: 420px; margin-top: 20px; padding-bottom: 50px; }
+        .container { width: 90%; max-width: 400px; margin-top: 20px; padding-bottom: 80px; }
 
         .card {
             background: white; padding: 25px; border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            opacity: 0; transform: translateY(20px); animation: fadeInUp 0.6s forwards;
+            opacity: 0; transform: translateX(-50px); animation: slideIn 0.6s forwards;
         }
 
-        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
 
         h2 { color: var(--primary-color); margin-bottom: 20px; font-size: 22px; text-align: center; }
 
-        .input-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 6px; font-weight: bold; color: #555; font-size: 13px; margin-left: 5px; }
+        .input-group { margin-bottom: 15px; opacity: 0; transform: translateX(-30px); }
+        .in-1 { animation: slideIn 0.5s forwards 0.1s; }
+        .in-2 { animation: slideIn 0.5s forwards 0.2s; }
+        .in-3 { animation: slideIn 0.5s forwards 0.3s; }
+        .in-4 { animation: slideIn 0.5s forwards 0.4s; }
+
+        label { display: block; margin-bottom: 6px; font-weight: bold; color: #555; font-size: 13px; }
         
         input {
             width: 100%; padding: 12px 15px; border: 1.5px solid #ddd;
-            border-radius: 12px; font-family: inherit; font-size: 15px;
+            border-radius: 10px; font-family: inherit; font-size: 15px;
             transition: 0.3s; outline: none;
         }
 
         input:focus { border-color: var(--primary-color); box-shadow: 0 0 8px rgba(0,103,71,0.1); }
         
-        /* সাদাকালো বা ডিজেবল বক্স স্টাইল */
-        input:disabled { 
-            background: #f2f2f2; 
-            color: #888; 
-            cursor: not-allowed; 
-            border-color: #eee;
-            border-style: dashed;
-        }
+        /* সাদাকালো বক্স স্টাইল (Disabled Inputs) */
+        input:disabled { background: #f2f2f2; color: #777; cursor: not-allowed; border-color: #eee; }
 
         .btn-update {
             width: 100%; background: var(--primary-color); color: white;
             padding: 14px; border: none; border-radius: 12px;
             font-size: 16px; font-weight: bold; cursor: pointer;
-            margin-top: 15px; transition: 0.3s;
+            margin-top: 10px; transition: 0.3s;
+            opacity: 0; transform: translateX(-30px); animation: slideIn 0.5s forwards 0.6s;
         }
 
         .btn-update:active { transform: scale(0.98); }
 
         .note {
-            margin-top: 25px; font-size: 12px; color: #777; text-align: center; line-height: 1.6;
+            margin-top: 25px; font-size: 12px; color: #777; text-align: center;
+            opacity: 0; animation: fadeIn 1s forwards 0.8s; line-height: 1.6;
         }
 
         .whatsapp-link {
             display: inline-flex; align-items: center; gap: 5px;
-            color: #25D366; text-decoration: none; font-weight: bold; margin-top: 5px;
+            color: #25D366; text-decoration: none; font-weight: bold;
         }
 
-        /* পপআপ */
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        /* মেসেজ বক্স */
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 999; backdrop-filter: blur(2px); }
         #msgBox {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -87,7 +90,7 @@
             width: 45px; height: 45px; background: var(--primary-color);
             color: white; border-radius: 50%; display: flex;
             align-items: center; justify-content: center; text-decoration: none;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 101;
         }
 
         footer { margin-top: auto; padding: 20px; font-size: 13px; color: #888; text-align: center; width: 100%; }
@@ -106,41 +109,39 @@
         <div class="card">
             <h2>প্রোফাইল আপডেট</h2>
             
-            <div class="input-group">
-                <label>ফোন নাম্বার (পরিবর্তনযোগ্য নয়)</label>
+            <div class="input-group in-1">
+                <label>ফোন নাম্বার </label>
                 <input type="text" id="displayPhone" disabled>
             </div>
 
-            <div class="input-group">
-                <label>ইমেইল অ্যাড্রেস (পরিবর্তনযোগ্য নয়)</label>
+            <div class="input-group in-2">
+                <label>ইমেইল এড্রেস (পরিবর্তনযোগ্য নয়)</label>
                 <input type="text" id="displayEmail" disabled>
             </div>
 
-            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-
-            <div class="input-group">
+            <div class="input-group in-3">
                 <label>আপনার নাম</label>
                 <input type="text" id="newName" placeholder="নাম লিখুন">
             </div>
 
-            <div class="input-group">
+            <div class="input-group in-4">
                 <label>নতুন পাসওয়ার্ড (৬ ডিজিট)</label>
                 <input type="number" id="newPass" placeholder="******" oninput="if(this.value.length > 6) this.value = this.value.slice(0,6);">
             </div>
 
-            <button class="btn-update" id="updateBtn" onclick="updateProfile()">তথ্য আপডেট করুন</button>
+            <button class="btn-update" onclick="updateProfile()">তথ্য আপডেট করুন</button>
 
             <div class="note">
-                বি: দ্র: ফোন নাম্বার বা ইমেইল পরিবর্তনের জন্য অ্যাডমিনের সাথে সরাসরি যোগাযোগ করুন। 
-                <br>
+                বি: দ্র: ফোন পরিবর্তনের জন্য অ্যাডমিন এর সাথে যোগাযোগ করুন। 
+                <br><br>
                 <a href="https://wa.me/8801571067027" class="whatsapp-link">
-                    <i class="fa-brands fa-whatsapp"></i> অ্যাডমিনের সাথে চ্যাট করুন
+                    <i class="fa-brands fa-whatsapp"></i> অ্যাডমিন যোগাযোগ
                 </a>
             </div>
         </div>
     </div>
 
-    <a href="profile.html" class="fixed-back"><i class="fa-solid fa-arrow-left"></i></a>
+    <a href="edit.html" class="fixed-back"><i class="fa-solid fa-arrow-left"></i></a>
 
     <div class="overlay" id="overlay"></div>
     <div id="msgBox">
@@ -172,20 +173,21 @@
 
         // বর্তমান ডাটা লোড করা
         async function loadCurrentData() {
-            const snap = await getDoc(doc(db, "users", userId));
-            if (snap.exists()) {
-                const data = snap.data();
-                document.getElementById('displayPhone').value = data.phone;
-                document.getElementById('displayEmail').value = data.email || "ইমেইল নেই";
-                document.getElementById('newName').value = data.name;
-                document.getElementById('newPass').value = data.pass;
-            }
+            try {
+                const snap = await getDoc(doc(db, "users", userId));
+                if (snap.exists()) {
+                    const data = snap.data();
+                    document.getElementById('displayPhone').value = data.phone;
+                    document.getElementById('displayEmail').value = data.email || "ইমেইল নেই";
+                    document.getElementById('newName').value = data.name;
+                    document.getElementById('newPass').value = data.pass;
+                }
+            } catch (e) { console.error(e); }
         }
 
         window.updateProfile = async () => {
             const name = document.getElementById('newName').value.trim();
             const pass = document.getElementById('newPass').value;
-            const btn = document.getElementById('updateBtn');
 
             if (name === "" || pass === "") {
                 showMsg("ভুল!", "সবগুলো ঘর পূরণ করুন।", true);
@@ -197,9 +199,6 @@
                 return;
             }
 
-            btn.disabled = true;
-            btn.innerText = "আপডেট হচ্ছে...";
-
             try {
                 // ১. ইউজার প্রোফাইল আপডেট
                 await updateDoc(doc(db, "users", userId), {
@@ -207,26 +206,20 @@
                     pass: pass
                 });
 
-                // ২. বইয়ের তথ্য আপডেট (userId চেক করে sellerName পরিবর্তন)
-                // আপনার বইয়ের কালেকশনে যদি ফিল্ডের নাম 'userId' হয়, তবে নিচের কোডটি কাজ করবে
+                // ২. বইয়ের তথ্য আপডেট (userId ব্যবহার করে সব বইয়ের বিক্রেতার নাম পরিবর্তন)
                 const q = query(collection(db, "books"), where("userId", "==", userId));
                 const querySnapshot = await getDocs(q);
-                
-                if (!querySnapshot.empty) {
-                    const batch = writeBatch(db);
-                    querySnapshot.forEach((bookDoc) => {
-                        batch.update(bookDoc.ref, { sellerName: name });
-                    });
-                    await batch.commit();
-                }
+                const batch = writeBatch(db);
 
-                showMsg("সফল!", "আপনার প্রোফাইল এবং সকল বইয়ের তথ্য আপডেট হয়েছে।");
+                querySnapshot.forEach((bookDoc) => {
+                    batch.update(bookDoc.ref, { sellerName: name });
+                });
+
+                await batch.commit();
+
+                showMsg("সফল!", "আপনার প্রোফাইল এবং আপলোড করা বইয়ের তথ্য আপডেট হয়েছে।");
             } catch (e) {
-                console.error(e);
                 showMsg("ত্রুটি!", "আপডেট করতে সমস্যা হয়েছে।", true);
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "তথ্য আপডেট করুন";
             }
         };
 
