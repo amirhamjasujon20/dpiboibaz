@@ -14,62 +14,73 @@
             display: flex; flex-direction: column; align-items: center; min-height: 100vh;
         }
 
-        /* হেডার */
+        /* ফ্লোটিং ব্যাক বাটন */
+        .fixed-back {
+            position: fixed; bottom: 20px; left: 20px;
+            width: 45px; height: 45px; background: var(--primary-color);
+            color: white; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2); text-decoration: none; z-index: 100;
+        }
+
         header {
             width: 100%; background: var(--primary-color); color: white;
             padding: 15px 20px; display: flex; justify-content: space-between;
             box-sizing: border-box; font-weight: bold; position: sticky; top: 0; z-index: 10;
         }
 
-        .container { width: 90%; max-width: 400px; text-align: center; margin-top: 30px; }
+        .container { width: 90%; max-width: 400px; text-align: center; margin-top: 20px; padding-bottom: 80px; }
 
-        /* প্রোফাইল সার্কেল */
         .avatar-circle {
-            width: 100px; height: 100px; background: var(--primary-color);
+            width: 90px; height: 90px; background: var(--primary-color);
             color: white; border-radius: 50%; display: flex; align-items: center;
-            justify-content: center; font-size: 40px; margin: 0 auto 20px;
+            justify-content: center; font-size: 35px; margin: 0 auto 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            opacity: 0; transform: scale(0.5); animation: zoomIn 0.5s forwards;
         }
 
-        /* তথ্য প্রদর্শনী */
-        .user-info { margin-bottom: 30px; opacity: 0; transform: translateX(-50px); animation: slideIn 0.6s forwards; }
-        .user-info h1 { font-size: 28px; margin: 5px 0; color: #333; }
-        .info-item { font-size: 15px; color: #666; margin: 8px 0; display: flex; justify-content: center; align-items: center; gap: 8px; }
-        .pass-toggle { cursor: pointer; color: var(--primary-color); }
+        /* ইউজার ইনফো অ্যানিমেশন */
+        .user-info h1 { font-size: 26px; margin: 5px 0; color: #333; opacity: 0; transform: translateX(-30px); animation: slideIn 0.5s forwards 0.2s; }
+        .info-item { font-size: 15px; color: #666; margin: 6px 0; display: flex; justify-content: center; align-items: center; gap: 8px; opacity: 0; transform: translateX(-30px); }
+        
+        /* একটার পর একটা আসার ডিলে */
+        .info-email { animation: slideIn 0.5s forwards 0.4s; }
+        .info-phone { animation: slideIn 0.5s forwards 0.6s; }
+        .info-pass  { animation: slideIn 0.5s forwards 0.8s; }
 
-        /* বাটন স্টাইল */
+        .pass-toggle { cursor: pointer; color: var(--primary-color); margin-left: 5px; }
+
+        /* বাটন সেকশন স্পেসিং */
+        .action-list { margin-top: 40px; }
+
         .action-card {
             background: white; padding: 18px; border-radius: 12px;
-            margin-bottom: 15px; box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            margin-bottom: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.05);
             display: flex; justify-content: space-between; align-items: center;
-            text-decoration: none; color: #333; font-weight: bold;
-            cursor: pointer; opacity: 0; transform: translateX(-50px);
+            text-decoration: none; color: #444; font-weight: bold;
+            cursor: pointer; opacity: 0; transform: translateY(20px);
         }
 
-        /* অ্যানিমেশন ডিলে */
-        .card-1 { animation: slideIn 0.5s forwards 0.3s; }
-        .card-2 { animation: slideIn 0.5s forwards 0.4s; }
-        .card-3 { animation: slideIn 0.5s forwards 0.5s; color: var(--danger-color); }
-        .card-4 { animation: slideIn 0.5s forwards 0.6s; color: var(--danger-color); }
+        .card-1 { animation: fadeInUp 0.5s forwards 1s; }
+        .card-2 { animation: fadeInUp 0.5s forwards 1.1s; }
+        .card-3 { animation: fadeInUp 0.5s forwards 1.2s; color: var(--danger-color); }
+        .card-4 { animation: fadeInUp 0.5s forwards 1.3s; color: var(--danger-color); }
 
         @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
+        @keyframes zoomIn { to { opacity: 1; transform: scale(1); } }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
 
-        /* কাস্টম পপআপ */
+        /* পপআপ */
         #customPopup {
-            position: fixed; top: 20%; left: -100%; width: 280px;
-            background: white; padding: 20px; border-radius: 0 15px 15px 0;
-            box-shadow: 10px 0 30px rgba(0,0,0,0.2); z-index: 1000;
-            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: fixed; top: 25%; left: -100%; width: 280px;
+            background: white; padding: 25px; border-radius: 0 20px 20px 0;
+            box-shadow: 10px 0 40px rgba(0,0,0,0.3); z-index: 1000;
+            transition: 0.6s cubic-bezier(0.18, 0.89, 0.32, 1.28);
         }
         #customPopup.active { left: 0; }
-        .overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.4); display: none; z-index: 999;
-        }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 999; backdrop-filter: blur(3px); }
 
-        /* ফুটার */
-        footer { margin-top: auto; padding: 20px; font-size: 13px; color: #888; display: flex; align-items: center; gap: 15px; }
-        .back-btn { background: #ddd; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #333; text-decoration: none; }
+        footer { margin-top: auto; padding: 20px; font-size: 13px; color: #888; text-align: center; width: 100%; }
     </style>
 </head>
 <body>
@@ -80,44 +91,45 @@
     </header>
 
     <div class="container">
-        <div class="avatar-circle" id="nameInitial">A</div>
+        <div class="avatar-circle" id="nameInitial">...</div>
         
         <div class="user-info">
-            <h1 id="displayName">ব্যক্তির নাম এখানে</h1>
-            <div class="info-item"><i class="fa-solid fa-envelope"></i> <span id="displayEmail">loading...</span></div>
-            <div class="info-item"><i class="fa-solid fa-phone"></i> <span id="displayPhone">loading...</span></div>
-            <div class="info-item">
+            <h1 id="displayName">লোড হচ্ছে...</h1>
+            <div class="info-item info-email"><i class="fa-solid fa-envelope"></i> <span id="displayEmail">...</span></div>
+            <div class="info-item info-phone"><i class="fa-solid fa-phone"></i> <span id="displayPhone">...</span></div>
+            <div class="info-item info-pass">
                 <i class="fa-solid fa-key"></i> 
                 <span id="displayPass">******</span>
-                <i class="fa-solid fa-eye pass-toggle" onclick="togglePass()"></i>
+                <i class="fa-solid fa-eye-slash pass-toggle" id="eyeIcon" onclick="togglePass()"></i>
             </div>
         </div>
 
-        <a href="pedit.html" class="action-card card-1">
-            আপনার প্রোফাইল এডিট করুন <i class="fa-solid fa-chevron-right"></i>
-        </a>
-        <a href="bedit.html" class="action-card card-2">
-            আপনার দেওয়া বইসমূহ <i class="fa-solid fa-chevron-right"></i>
-        </a>
-        <div class="action-card card-3" onclick="confirmDelete()">
-            আপনার একাউন্ট ডিলিট করুন <i class="fa-solid fa-trash-can"></i>
-        </div>
-        <div class="action-card card-4" onclick="logout()">
-            লগ আউট করুন <i class="fa-solid fa-right-from-bracket"></i>
+        <div class="action-list">
+            <a href="pedit.html" class="action-card card-1">
+                আপনার প্রোফাইল এডিট করুন <i class="fa-solid fa-user-pen"></i>
+            </a>
+            <a href="bedit.html" class="action-card card-2">
+                আপনার দেওয়া বইসমূহ <i class="fa-solid fa-book"></i>
+            </a>
+            <div class="action-card card-3" onclick="confirmDelete()">
+                আপনার একাউন্ট ডিলিট করুন <i class="fa-solid fa-trash-can"></i>
+            </div>
+            <div class="action-card card-4" onclick="logout()">
+                লগ আউট করুন <i class="fa-solid fa-right-from-bracket"></i>
+            </div>
         </div>
     </div>
+
+    <a href="index.html" class="fixed-back"><i class="fa-solid fa-arrow-left"></i></a>
 
     <div class="overlay" id="overlay" onclick="closePopup()"></div>
     <div id="customPopup">
-        <h3 id="popTitle" style="color:var(--primary-color)">টাইটেল</h3>
-        <p id="popMsg">মেসেজ এখানে...</p>
-        <button id="popActionBtn" style="background:var(--primary-color); color:white; border:none; padding:10px 20px; border-radius:8px; width:100%">ঠিক আছে</button>
+        <h3 id="popTitle" style="color:var(--primary-color); margin-top: 0;">টাইটেল</h3>
+        <p id="popMsg" style="color: #555; line-height: 1.5;">মেসেজ...</p>
+        <button id="popActionBtn" style="background:var(--primary-color); color:white; border:none; padding:12px; border-radius:10px; width:100%; font-weight: bold; cursor: pointer;">ঠিক আছে</button>
     </div>
 
-    <footer>
-        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
-        <span>© 2026 | A. H. SUJON</span>
-    </footer>
+    <footer>© 2026 DPI Boi Baz | Created by A.H. SUJON</footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -141,21 +153,30 @@
         if (!userId) window.location.href = "login.html";
 
         async function loadProfile() {
-            const userRef = doc(db, "users", userId);
-            const snap = await getDoc(userRef);
-            if (snap.exists()) {
-                const data = snap.data();
-                document.getElementById('displayName').innerText = data.name;
-                document.getElementById('displayPhone').innerText = data.phone;
-                document.getElementById('displayEmail').innerText = data.email || "ইমেইল নেই";
-                document.getElementById('nameInitial').innerText = data.name.charAt(0);
-                realPass = data.pass;
-            }
+            try {
+                const userRef = doc(db, "users", userId);
+                const snap = await getDoc(userRef);
+                if (snap.exists()) {
+                    const data = snap.data();
+                    document.getElementById('displayName').innerText = data.name;
+                    document.getElementById('displayPhone').innerText = data.phone;
+                    document.getElementById('displayEmail').innerText = data.email || "ইমেইল যোগ করা হয়নি";
+                    document.getElementById('nameInitial').innerText = data.name.charAt(0).toUpperCase();
+                    realPass = data.pass;
+                }
+            } catch (e) { console.error(e); }
         }
 
         window.togglePass = () => {
             const passSpan = document.getElementById('displayPass');
-            passSpan.innerText = passSpan.innerText === "******" ? realPass : "******";
+            const eyeIcon = document.getElementById('eyeIcon');
+            if (passSpan.innerText === "******") {
+                passSpan.innerText = realPass;
+                eyeIcon.classList.replace('fa-eye-slash', 'fa-eye');
+            } else {
+                passSpan.innerText = "******";
+                eyeIcon.classList.replace('fa-eye', 'fa-eye-slash');
+            }
         };
 
         window.showPopup = (title, msg, actionFn = null, isDanger = false) => {
@@ -175,7 +196,7 @@
         };
 
         window.confirmDelete = () => {
-            showPopup("সতর্কতা!", "আপনি কি নিশ্চিতভাবে একাউন্ট ডিলিট করতে চান? সব বই মুছে যাবে।", processDeletion, true);
+            showPopup("নিশ্চিত তো?", "একাউন্ট ডিলিট করলে আপনার আপলোড করা সব বই স্বয়ংক্রিয়ভাবে মুছে যাবে।", processDeletion, true);
         };
 
         async function processDeletion() {
@@ -191,7 +212,7 @@
         }
 
         window.logout = () => {
-            showPopup("লগআউট", "আপনি কি লগআউট করতে চান?", () => {
+            showPopup("লগআউট", "আপনি কি আপনার সেশন শেষ করতে চান?", () => {
                 localStorage.clear();
                 window.location.href = "index.html";
             });
