@@ -51,6 +51,14 @@
     right: 0; /* নিশ্চিত করবে ডান দিক পর্যন্ত বিস্তৃত হতে */
     z-index: 1000;
 }
+        footer {
+    width: 100%;
+    text-align: center;
+    padding: 20px 0;
+    font-size: 12px;
+    color: #888;
+    margin-top: auto; /* কন্টেন্ট কম থাকলেও নিচে থাকবে */
+}
         
         /* লাল বক্স বড় এবং আকর্ষণীয় করা হয়েছে */
         #emailWarningBar {
@@ -295,9 +303,13 @@
         window.closeModals = () => {
             document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
         };
+        <footer>
+        © 2026 DPI Boi Baz | Created by A.H. SUJON
+    </footer>
     </script>
 </body>
 </html>
+
 
 
 
