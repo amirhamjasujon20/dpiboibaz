@@ -24,19 +24,36 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
 
-        body { 
-            font-family: 'SolaimanLipi', sans-serif; 
-            margin: 0; padding: 0;
-            background: radial-gradient(circle, rgba(224, 60, 49, 0.05) 20%, rgba(0, 103, 71, 0.05) 100%);
-            display: flex; flex-direction: column; align-items: center; min-height: 100vh;
-            overflow-x: hidden;
-        }
+      * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* এটি প্যাডিংকে উইডথের ভেতরে রাখে, ফলে ডান পাশে গ্যাপ হয় না */
+}
 
-        header {
-            width: 100%; background: #006747; color: white; padding: 10px 15px;
-            display: flex; justify-content: space-between; align-items: center;
-            box-sizing: border-box; position: sticky; top: 0; z-index: 100;
-        }
+body {
+    font-family: 'SolaimanLipi', sans-serif;
+    background: #f0f4f2;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* সাইড স্ক্রলিং বন্ধ করবে */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+     header {
+    width: 100%;
+    background: var(--primary-color);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
         
         /* লাল বক্স বড় এবং আকর্ষণীয় করা হয়েছে */
         #emailWarningBar {
@@ -284,5 +301,6 @@
     </script>
 </body>
 </html>
+
 
 
