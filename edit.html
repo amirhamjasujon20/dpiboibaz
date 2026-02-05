@@ -8,11 +8,23 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --primary-color: #006747; --danger-color: #E03C31; }
-        body {
-            font-family: 'SolaimanLipi', sans-serif;
-            background: #f0f4f2; margin: 0; padding: 0; overflow-x: hidden;
-            display: flex; flex-direction: column; align-items: center; min-height: 100vh;
-        }
+      * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* এটি প্যাডিংকে উইডথের ভেতরে রাখে, ফলে ডান পাশে গ্যাপ হয় না */
+}
+
+body {
+    font-family: 'SolaimanLipi', sans-serif;
+    background: #f0f4f2;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* সাইড স্ক্রলিং বন্ধ করবে */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
 
         /* ফ্লোটিং ব্যাক বাটন */
         .fixed-back {
@@ -23,11 +35,19 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.2); text-decoration: none; z-index: 100;
         }
 
-        header {
-            width: 100%; background: var(--primary-color); color: white;
-            padding: 15px 20px; display: flex; justify-content: space-between;
-            box-sizing: border-box; font-weight: bold; position: sticky; top: 0; z-index: 10;
-        }
+       header {
+    width: 100%;
+    background: var(--primary-color);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
 
         .container { width: 90%; max-width: 400px; text-align: center; margin-top: 20px; padding-bottom: 80px; }
 
@@ -222,4 +242,3 @@
     </script>
 </body>
 </html>
-
