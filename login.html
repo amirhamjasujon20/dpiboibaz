@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>লগইন - DPI Boi Baz</title>
-    <meta name="description" content="ডিপ্লোমা বইয়ের ডিজিটাল বাজার - লগইন পেজ">
+    <title>লগইন - DPI Boi Baz</title> 
+    <meta name="description" content="ঢাকা পলিটেকনিকের বই কেনা-বেচার প্ল্যাটফর্ম">
+
     <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.cdnfonts.com/css/solaimanlipi" rel="stylesheet">
     
@@ -14,53 +16,86 @@
             font-family: 'SolaimanLipi', Arial, sans-serif; 
             background: radial-gradient(circle, rgba(224, 60, 49, 0.05) 20%, rgba(0, 103, 71, 0.05) 100%); 
             height: 100vh; margin: 0; display: flex; justify-content: center; align-items: center; 
-            overflow: hidden;
+            overflow: hidden; position: relative;
         }
         .card { 
             background: white; padding: 25px; border-radius: 20px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 90%; max-width: 380px; text-align: center; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 90%; max-width: 380px; text-align: center; 
         }
         h2 { color: #006747; margin-bottom: 20px; font-size: 24px; }
 
-        /* গুগল লগইন বাটন */
-        .google-login-btn {
-            width: 100%; background: #fff; border: 1px solid #dadce0; color: #3c4043;
-            padding: 10px; border-radius: 8px; cursor: pointer; display: flex;
+        /* ইমেইল লগইন বাটন */
+        .google-btn {
+            width: 100%; background: #fff; color: #444; border: 1px solid #ddd;
+            padding: 10px; border-radius: 10px; cursor: pointer; display: flex;
             align-items: center; justify-content: center; gap: 10px;
-            font-size: 16px; font-weight: bold; transition: 0.3s; margin-bottom: 5px;
+            margin-bottom: 20px; transition: 0.3s;
         }
-        .google-login-btn:hover { background: #f8f9fa; }
-        .small-txt { font-size: 11px; color: #777; margin-bottom: 15px; display: block; }
+        .google-btn:hover { background: #f1f1f1; }
+        .google-btn b { font-size: 16px; display: block; }
+        .google-btn span { font-size: 11px; color: #888; display: block; margin-top: -2px; }
 
-        .divider { height: 1px; background: #eee; margin: 15px 0; position: relative; }
-        .divider::after { content: "অথবা"; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: white; padding: 0 10px; color: #999; font-size: 12px; }
+        .or-divider { margin: 15px 0; color: #bbb; font-size: 14px; position: relative; }
+        .or-divider::before, .or-divider::after { content: ""; flex: 1; height: 1px; background: #eee; }
 
         .phone-container {
             display: flex; align-items: center; background: #f9f9f9;
-            border: 1px solid #ccc; border-radius: 8px; margin-bottom: 12px; overflow: hidden;
+            border: 1px solid #eee; border-radius: 10px; margin-bottom: 12px; overflow: hidden;
         }
-        .prefix { background: #eee; padding: 12px; color: #555; font-weight: bold; border-right: 1px solid #ccc; }
-        .phone-container input { border: none; flex: 1; padding: 12px; outline: none; background: transparent; }
+        .prefix { background: #eee; padding: 12px; color: #555; font-weight: bold; border-right: 1px solid #eee; }
+        .phone-container input { border: none; flex: 1; background: transparent; padding: 12px; font-size: 16px; outline: none; }
 
         .input-group { position: relative; width: 100%; margin-bottom: 12px; }
-        input[type="password"], input[type="number"] { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 16px; outline: none; }
-        input:focus { border-color: #006747; }
+        .input-group input { 
+            width: 100%; padding: 12px 15px; border: 1px solid #eee; 
+            border-radius: 10px; box-sizing: border-box; outline: none; font-size: 16px; background: #f9f9f9;
+        }
+        .input-group input:focus { border-color: #006747; background: #fff; }
 
-        .toggle-btn { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #888; }
+        .toggle-btn { 
+            position: absolute; right: 12px; top: 50%; transform: translateY(-50%); 
+            background: none; border: none; cursor: pointer; color: #888; font-size: 18px;
+        }
 
-        .btn { width: 100%; background: #006747; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 18px; font-weight: bold; transition: 0.3s; }
-        .btn:hover { background: #004d35; }
-        .btn-outline { background: #eee; color: #333; margin-top: 10px; }
+        .btn { 
+            width: 100%; background: #006747; color: white; border: none; 
+            padding: 12px; border-radius: 10px; cursor: pointer; 
+            font-size: 18px; font-weight: bold; transition: 0.3s;
+        }
+        .btn:hover { background: #004d35; transform: translateY(-2px); }
 
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); justify-content: center; align-items: center; z-index: 1000; }
-        .modal-box { background: white; padding: 25px; border-radius: 15px; width: 85%; max-width: 320px; text-align: center; animation: zoom 0.3s ease-out; }
+        .forget-link { margin-top: 15px; display: block; text-decoration: none; color: #666; font-size: 14px; }
+        .footer-link { margin-top: 20px; font-size: 14px; color: #444; }
+        .footer-link a { color: #E03C31; text-decoration: none; font-weight: bold; }
+
+        /* পপআপ স্টাইল */
+        #alertModal { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); 
+            justify-content: center; align-items: center; z-index: 2000; 
+        }
+        .modal-box { 
+            background: white; padding: 25px; border-radius: 20px; width: 85%; max-width: 320px; 
+            text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+        .zoom-in { animation: zoom 0.3s ease-out; }
         @keyframes zoom { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         
-        .contact-icons { display: flex; justify-content: center; gap: 20px; margin-top: 15px; font-size: 30px; }
-        .contact-icons a { color: #006747; transition: 0.3s; }
-        .contact-icons a:hover { color: #E03C31; }
+        .contact-icons { display: flex; justify-content: center; gap: 25px; margin-top: 20px; }
+        .contact-icons a { font-size: 35px; text-decoration: none; }
+        .whatsapp { color: #25D366; }
+        .email-icon { color: #EA4335; }
+        
+        .confirm-btns { display: flex; gap: 10px; margin-top: 20px; }
+        .confirm-btns .btn-no { background: #eee; color: #444; flex: 1; }
+        .confirm-btns .btn-yes { flex: 1; }
 
-        .home-btn { position: fixed; bottom: 30px; left: 30px; width: 50px; height: 50px; background: #006747; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .home-btn {
+            position: fixed; bottom: 30px; left: 30px;
+            width: 50px; height: 50px; background: #006747; color: white;
+            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            text-decoration: none; font-size: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 <body>
@@ -68,42 +103,49 @@
     <div class="card">
         <h2>লগইন করুন</h2>
 
-        <button class="google-login-btn" onclick="loginWithEmail()">
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="18">
-            ইমেইল দ্বারা লগইন করুন
+        <button class="google-btn" onclick="handleEmailLogin()">
+            <i class="fa-solid fa-envelope" style="color: #2e7d32; font-size: 22px;"></i>
+            <div style="text-align: left;">
+                <b>ইমেইল দ্বারা লগইন করুন</b>
+                <span>(পাসওয়ার্ড ছাড়া)</span>
+            </div>
         </button>
-        <span class="small-txt">(পাসওয়ার্ড ছাড়া)</span>
 
-        <div class="divider"></div>
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+            <hr style="flex:1; border:0; border-top:1px solid #eee;">
+            <span style="color:#999; font-size:12px;">অথবা ফোন নাম্বার দিয়ে</span>
+            <hr style="flex:1; border:0; border-top:1px solid #eee;">
+        </div>
         
         <div class="phone-container">
             <span class="prefix">+880</span>
-            <input type="number" id="phone" placeholder="ফোন নম্বর লিখুন">
+            <input type="number" id="phone" placeholder="শেষের ১০ ডিজিট লিখুন">
         </div>
 
         <div class="input-group">
             <input type="password" id="pass" placeholder="পাসওয়ার্ড">
-            <button class="toggle-btn" onclick="togglePass()"><i id="eyeIcon" class="fa-solid fa-eye"></i></button>
+            <button class="toggle-btn" onclick="togglePass()">
+                <i id="eyeIcon" class="fa-solid fa-eye"></i>
+            </button>
         </div>
 
         <button class="btn" onclick="handleLogin()">লগইন</button>
-        <div style="margin-top:15px; font-size:14px;">অ্যাকাউন্ট নেই? <a href="signup.html" style="color:#E03C31; font-weight:bold; text-decoration:none;">নতুন তৈরি করুন</a></div>
-    </div>
 
-    <div id="customModal" class="modal">
-        <div class="modal-box">
-            <div id="m-icon" style="font-size: 40px; margin-bottom: 10px;"></div>
-            <div id="m-text" style="font-size: 16px; color: #333; margin-bottom: 20px;"></div>
-            <div id="m-footer"></div>
-        </div>
+        <a href="fpass.html" class="forget-link">পাসওয়ার্ড ভুলে গেছেন?</a>
+        <div class="footer-link">অ্যাকাউন্ট নেই? <a href="signup.html">নতুন তৈরি করুন</a></div>
     </div>
 
     <a href="index.html" class="home-btn"><i class="fa-solid fa-arrow-left"></i></a>
 
+    <div id="alertModal">
+        <div class="modal-box zoom-in" id="modalContent">
+            </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDbtD45rBSZN5RUXCHijFiabZ0uKPYeya0",
@@ -119,8 +161,16 @@
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
-        // ইমেইল দিয়ে লগইন লজিক
-        window.loginWithEmail = async function() {
+        // পাসওয়ার্ড হাইড/শো
+        window.togglePass = function() {
+            const p = document.getElementById('pass');
+            const icon = document.getElementById('eyeIcon');
+            p.type = p.type === "password" ? "text" : "password";
+            icon.classList.toggle("fa-eye-slash");
+        }
+
+        // ইমেইল লগইন লজিক
+        window.handleEmailLogin = async function() {
             try {
                 const result = await signInWithPopup(auth, provider);
                 const email = result.user.email;
@@ -130,67 +180,77 @@
 
                 if (!snap.empty) {
                     const userData = snap.docs[0].data();
-                    showModal("👋", `আপনার <b>'${userData.name}'</b> নামে একটি অ্যাকাউন্ট রয়েছে। আপনি কি লগইন করতে চান?`, `
-                        <button class="btn" onclick="completeLogin('${snap.docs[0].id}', '${userData.name}')">হ্যাঁ</button>
-                        <button class="btn btn-outline" onclick="closeModal()">না</button>
-                    `);
+                    const userId = snap.docs[0].id;
+                    showConfirmModal(userData.name, () => {
+                        localStorage.setItem('userId', userId);
+                        localStorage.setItem('userName', userData.name);
+                        localStorage.setItem('userPhone', userData.phone);
+                        window.location.href = "index.html";
+                    });
                 } else {
-                    showModal("❌", "আপনার এই ইমেইল দ্বারা অ্যাকাউন্ট খোলা নেই। দয়া করে ফোন নাম্বার দ্বারা লগইন করুন অথবা নতুন অ্যাকাউন্ট তৈরি করুন।", `
-                        <button class="btn" onclick="showContactModal()">ঠিক আছে</button>
-                    `);
+                    showErrorModal();
                 }
             } catch (error) {
                 console.error(error);
             }
         }
 
-        window.showContactModal = function() {
-            showModal("📞", "যেকোন সমস্যায় Admin এর সাথে যোগাযোগ করুন", `
-                <div class="contact-icons">
-                    <a href="https://wa.me/01571067027"><i class="fa-brands fa-whatsapp"></i></a>
-                    <a href="mailto:dpiboibaz@gmail.com"><i class="fa-solid fa-envelope"></i></a>
+        function showConfirmModal(name, onConfirm) {
+            const modal = document.getElementById('alertModal');
+            const content = document.getElementById('modalContent');
+            content.innerHTML = `
+                <div style="font-size: 50px;">😊</div>
+                <p style="font-size: 18px; margin: 15px 0;">আপনার <b>'${name}'</b> নামে একটি অ্যাকাউন্ট রয়েছে। আপনি কি লগইন করতে চান?</p>
+                <div class="confirm-btns">
+                    <button class="btn btn-no" onclick="closeModal()">না</button>
+                    <button class="btn btn-yes" id="confirmYes">হ্যাঁ</button>
                 </div>
-                <button class="btn btn-outline" style="margin-top:15px" onclick="closeModal()">বন্ধ করুন</button>
-            `);
+            `;
+            modal.style.display = 'flex';
+            document.getElementById('confirmYes').onclick = onConfirm;
         }
 
-        window.completeLogin = function(id, name) {
-            localStorage.setItem('userId', id);
-            localStorage.setItem('userName', name);
-            window.location.href = "index.html";
+        function showErrorModal() {
+            const modal = document.getElementById('alertModal');
+            const content = document.getElementById('modalContent');
+            content.innerHTML = `
+                <div style="font-size: 50px;">❌</div>
+                <p style="font-size: 16px; margin: 15px 0;">আপনার এই ইমেইল দ্বারা অ্যাকাউন্ট খোলা নেই। দয়া করে ফোন নম্বর দ্বারা লগইন করুন অথবা নতুন অ্যাকাউন্ট তৈরী করুন।</p>
+                <button class="btn" onclick="showAdminContact()">ঠিক আছে</button>
+            `;
+            modal.style.display = 'flex';
         }
+
+        window.showAdminContact = function() {
+            const content = document.getElementById('modalContent');
+            content.innerHTML = `
+                <div style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">অ্যাডমিনের সাথে যোগাযোগ</div>
+                <p>যেকোন সমস্যায় admin এর সাথে যোগাযোগ করুন</p>
+                <div class="contact-icons">
+                    <a href="https://wa.me/8801571067027" class="whatsapp"><i class="fa-brands fa-whatsapp"></i></a>
+                    <a href="mailto:dpiboibaz@gmail.com" class="email-icon"><i class="fa-solid fa-envelope"></i></a>
+                </div>
+                <button class="btn" style="margin-top:20px;" onclick="closeModal()">বন্ধ করুন</button>
+            `;
+        }
+
+        window.closeModal = () => document.getElementById('alertModal').style.display = 'none';
 
         // সাধারণ ফোন লগইন
         window.handleLogin = async function() {
-            const phone = "+880" + document.getElementById('phone').value;
+            const phone = document.getElementById('phone').value;
             const pass = document.getElementById('pass').value;
-
-            const q = query(collection(db, "users"), where("phone", "==", phone));
+            if(!phone || !pass) return alert("সবগুলো ঘর পূরণ করুন");
+            
+            const q = query(collection(db, "users"), where("phone", "==", "+880"+phone));
             const snap = await getDocs(q);
-
-            if (!snap.empty) {
-                const userDoc = snap.docs[0];
-                if (userDoc.data().pass === pass) {
-                    completeLogin(userDoc.id, userDoc.data().name);
-                } else {
-                    alert("ভুল পাসওয়ার্ড!");
-                }
+            
+            if(!snap.empty && snap.docs[0].data().pass === pass) {
+                localStorage.setItem('userId', snap.docs[0].id);
+                window.location.href = "index.html";
             } else {
-                alert("অ্যাকাউন্ট খুঁজে পাওয়া যায়নি!");
+                alert("ভুল তথ্য অথবা অ্যাকাউন্ট নেই");
             }
-        }
-
-        function showModal(icon, text, footer) {
-            document.getElementById('m-icon').innerHTML = icon;
-            document.getElementById('m-text').innerHTML = text;
-            document.getElementById('m-footer').innerHTML = footer;
-            document.getElementById('customModal').style.display = 'flex';
-        }
-
-        window.closeModal = () => document.getElementById('customModal').style.display = 'none';
-        window.togglePass = () => {
-            const p = document.getElementById('pass');
-            p.type = p.type === "password" ? "text" : "password";
         }
     </script>
 </body>
