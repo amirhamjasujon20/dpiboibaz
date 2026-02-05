@@ -37,11 +37,20 @@
             overflow-x: hidden;
         }
 
-        header {
-            width: 100%; background: #006747; color: white; padding: 10px 15px;
-            display: flex; justify-content: space-between; align-items: center;
-            box-sizing: border-box; position: sticky; top: 0; z-index: 100;
-        }
+      header {
+    width: 100%; /* এটি স্ক্রিনের পুরোটা দখল করবে */
+    background: #006747;
+    color: white;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    left: 0; /* নিশ্চিত করবে বাম দিক থেকে শুরু হতে */
+    right: 0; /* নিশ্চিত করবে ডান দিক পর্যন্ত বিস্তৃত হতে */
+    z-index: 1000;
+}
         
         /* লাল বক্স বড় এবং আকর্ষণীয় করা হয়েছে */
         #emailWarningBar {
@@ -289,5 +298,6 @@
     </script>
 </body>
 </html>
+
 
 
