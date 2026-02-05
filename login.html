@@ -70,17 +70,17 @@
         }
 
         /* অ্যানিমেশন ক্লাস */
-        .slide-in { animation: slideInLeft 0.5s forwards; }
-        .slide-out { animation: slideOutRight 0.5s forwards; }
+        .slide-in { animation: slideIn 0.4s ease-out forwards; }
+        .slide-out { animation: slideOut 0.4s ease-in forwards; }
 
-        @keyframes slideInLeft {
-            from { transform: translateX(-150%); opacity: 0; }
+        @keyframes slideIn {
+            from { transform: translateX(-100vw); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
 
-        @keyframes slideOutRight {
+        @keyframes slideOut {
             from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(150%); opacity: 0; }
+            to { transform: translateX(100vw); opacity: 0; }
         }
 
         .contact-icons { display: flex; justify-content: center; gap: 30px; margin: 15px 0; }
@@ -146,17 +146,25 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // পপআপ বন্ধ করার ফাংশন (অ্যানিমেশনসহ)
+        // ওপেন করার ফাংশন (বাম থেকে ডানে)
+        function openModal(htmlContent) {
+            const modal = document.getElementById('statusModal');
+            const box = document.getElementById('modalContent');
+            box.innerHTML = htmlContent;
+            modal.style.display = 'flex';
+            box.classList.remove('slide-out');
+            box.classList.add('slide-in');
+        }
+
+        // ক্লোজ করার ফাংশন (ডান দিকে চলে যাবে)
         window.closeModal = () => {
-            const modalBox = document.querySelector('.modal-box');
-            modalBox.classList.remove('slide-in');
-            modalBox.classList.add('slide-out');
-            
-            // অ্যানিমেশন শেষ হওয়ার পর হাইড করা
+            const box = document.getElementById('modalContent');
+            const modal = document.getElementById('statusModal');
+            box.classList.remove('slide-in');
+            box.classList.add('slide-out');
             setTimeout(() => {
-                document.getElementById('statusModal').style.display = 'none';
-                modalBox.classList.remove('slide-out');
-            }, 450);
+                modal.style.display = 'none';
+            }, 400); 
         };
 
         window.handleCredentialResponse = async (response) => {
@@ -176,17 +184,14 @@
         };
 
         function showConfirmModal(name, id, data) {
-            const modal = document.getElementById('statusModal');
-            const content = document.getElementById('modalContent');
-            content.innerHTML = `
+            const html = `
                 <div style="font-size: 50px;">😊</div>
                 <h3>অ্যাকাউন্ট পাওয়া গেছে!</h3>
                 <p>আপনার <b>'${name}'</b> নামে একটি অ্যাকাউন্ট রয়েছে। আপনি কি লগইন করতে চান?</p>
                 <button class="btn" id="yesBtn">হ্যাঁ, লগইন করি</button>
                 <button class="btn" style="background:#eee; color:#333;" onclick="closeModal()">না</button>
             `;
-            content.classList.add('slide-in');
-            modal.style.display = 'flex';
+            openModal(html);
             document.getElementById('yesBtn').onclick = () => {
                 localStorage.setItem('userId', id);
                 localStorage.setItem('userName', data.name);
@@ -195,21 +200,17 @@
         }
 
         function showErrorModal() {
-            const modal = document.getElementById('statusModal');
-            const content = document.getElementById('modalContent');
-            content.innerHTML = `
+            const html = `
                 <div style="font-size: 50px;">❌</div>
                 <h3>অ্যাকাউন্ট নেই!</h3>
                 <p>আপনার এই ইমেইল দ্বারা অ্যাকাউন্ট খোলা নেই। দয়া করে ফোন নম্বর দ্বারা লগইন করুন অথবা নতুন তৈরি করুন।</p>
                 <button class="btn" onclick="showAdminContact()">ঠিক আছে</button>
             `;
-            content.classList.add('slide-in');
-            modal.style.display = 'flex';
+            openModal(html);
         }
 
         window.showAdminContact = () => {
-            const content = document.getElementById('modalContent');
-            content.innerHTML = `
+            const html = `
                 <h3>অ্যাডমিন সহায়তা</h3>
                 <p>যেকোন সমস্যায় admin এর সাথে যোগাযোগ করুন</p>
                 <div class="contact-icons">
@@ -218,17 +219,24 @@
                 </div>
                 <button class="btn" onclick="closeModal()">বন্ধ করুন</button>
             `;
-            // কন্টেন্ট রিপ্লেস করার সময় আবার ইন অ্যানিমেশন
-            content.classList.remove('slide-in');
-            setTimeout(() => content.classList.add('slide-in'), 10);
+            const box = document.getElementById('modalContent');
+            box.innerHTML = html; 
         };
 
         window.handleLogin = async function() {
             const phone = document.getElementById('phone').value;
             const pass = document.getElementById('pass').value;
 
-            if(!phone || !pass) return alert("সব ঘর পূরণ করুন");
-            if(pass.length !== 6) return alert("পাসওয়ার্ড ঠিক ৬ ডিজিট হতে হবে");
+            if(!phone || !pass) {
+                const html = `<div style="font-size: 50px;">⚠️</div><h3>ভুল!</h3><p>সব ঘর পূরণ করুন</p><button class="btn" onclick="closeModal()">ঠিক আছে</button>`;
+                openModal(html);
+                return;
+            }
+            if(pass.length !== 6) {
+                const html = `<div style="font-size: 50px;">🚫</div><h3>পাসওয়ার্ড</h3><p>পাসওয়ার্ড ঠিক ৬ ডিজিট হতে হবে</p><button class="btn" onclick="closeModal()">ঠিক আছে</button>`;
+                openModal(html);
+                return;
+            }
 
             const q = query(collection(db, "users"), where("phone", "==", "+880"+phone));
             const snap = await getDocs(q);
@@ -238,7 +246,8 @@
                 localStorage.setItem('userName', snap.docs[0].data().name);
                 window.location.href = "index.html";
             } else {
-                alert("ভুল নম্বর বা পাসওয়ার্ড!");
+                const html = `<div style="font-size: 50px;">❌</div><h3>ব্যর্থ!</h3><p>ভুল নম্বর বা পাসওয়ার্ড!</p><button class="btn" onclick="closeModal()">আবার চেষ্টা করুন</button>`;
+                openModal(html);
             }
         };
 
