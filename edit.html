@@ -3,112 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>প্রোফাইল এডিট - DPI Boi Baz</title>
-    <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="manifest" href="manifest.json">
+    <title>প্রোফাইল - DPI Boi Baz</title>
+    <link href="https://fonts.cdnfonts.com/css/solaimanlipi" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: 'Arial', sans-serif; background: #f4f7f6; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; padding-bottom: 100px; }
-        .container { width: 100%; max-width: 480px; }
-        .section-card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); margin-bottom: 20px; position: relative; }
-        
-        h2 { color: #006747; font-size: 14px; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 0; display: flex; justify-content: space-between; align-items: center; }
-        
-        .edit-toggle { color: #006747; cursor: pointer; font-size: 14px; transition: 0.3s; }
-        .edit-toggle.active { color: #E03C31; }
-
-        label { display: block; margin-top: 12px; font-weight: bold; font-size: 12px; color: #555; }
-        
-        input { 
-            width: 100%; padding: 10px; margin-top: 5px; border: 1.5px solid #ddd; 
-            border-radius: 8px; box-sizing: border-box; font-size: 13px; 
-            transition: 0.3s; background: #eeeeee; color: #777; pointer-events: none;
+        :root { --primary-color: #006747; --danger-color: #E03C31; }
+        body {
+            font-family: 'SolaimanLipi', sans-serif;
+            background: #f0f4f2; margin: 0; padding: 0;
+            display: flex; flex-direction: column; align-items: center; min-height: 100vh;
         }
 
-        /* এডিট মোড স্টাইল */
-        input.editable { background: #ffffff; border-color: #006747; color: #333; pointer-events: auto; }
-        
-        /* ফোন নম্বর লক থাকবে */
-        .locked-phone { background: #eeeeee !important; color: #999 !important; pointer-events: none !important; }
-
-        .btn-save { 
-            background: #006747; 
-            color: white; 
-            border: none; 
-            padding: 10px;
-            border-radius: 8px; 
-            cursor: pointer; 
-            margin-top: 15px; 
-            width: 100%; 
-            display: none; 
-            font-size: 14px;
-            font-weight: bold;
+        /* হেডার */
+        header {
+            width: 100%; background: var(--primary-color); color: white;
+            padding: 15px 20px; display: flex; justify-content: space-between;
+            box-sizing: border-box; font-weight: bold; position: sticky; top: 0; z-index: 10;
         }
-        
-        .book-item { border-bottom: 1px solid #eee; padding: 15px 0; }
-        .delete-btn { color: #E03C31; cursor: pointer; font-size: 11px; margin-top: 10px; display: inline-block; font-weight: bold; }
 
-        /* বটম নেভিগেশন */
-        .bottom-nav { position: fixed; bottom: 20px; width: 90%; max-width: 480px; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
-        
-        .home-btn { width: 50px; height: 50px; background: #006747; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; text-decoration: none; font-size: 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-        
-        .logout-btn { background: #E03C31; color: white; padding: 12px 25px; border-radius: 10px; text-decoration: none; font-weight: bold; font-size: 14px; box-shadow: 0 4px 10px rgba(224, 60, 49, 0.3); display: flex; align-items: center; gap: 8px; }
+        .container { width: 90%; max-width: 400px; text-align: center; margin-top: 30px; }
 
-        #statusModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); justify-content: center; align-items: center; z-index: 1000; }
-        .modal-box { background: white; padding: 25px; border-radius: 15px; text-align: center; width: 80%; max-width: 300px; animation: zoom 0.3s; }
-        @keyframes zoom { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        /* প্রোফাইল সার্কেল */
+        .avatar-circle {
+            width: 100px; height: 100px; background: var(--primary-color);
+            color: white; border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; font-size: 40px; margin: 0 auto 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* তথ্য প্রদর্শনী */
+        .user-info { margin-bottom: 30px; opacity: 0; transform: translateX(-50px); animation: slideIn 0.6s forwards; }
+        .user-info h1 { font-size: 28px; margin: 5px 0; color: #333; }
+        .info-item { font-size: 15px; color: #666; margin: 8px 0; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .pass-toggle { cursor: pointer; color: var(--primary-color); }
+
+        /* বাটন স্টাইল */
+        .action-card {
+            background: white; padding: 18px; border-radius: 12px;
+            margin-bottom: 15px; box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            display: flex; justify-content: space-between; align-items: center;
+            text-decoration: none; color: #333; font-weight: bold;
+            cursor: pointer; opacity: 0; transform: translateX(-50px);
+        }
+
+        /* অ্যানিমেশন ডিলে */
+        .card-1 { animation: slideIn 0.5s forwards 0.3s; }
+        .card-2 { animation: slideIn 0.5s forwards 0.4s; }
+        .card-3 { animation: slideIn 0.5s forwards 0.5s; color: var(--danger-color); }
+        .card-4 { animation: slideIn 0.5s forwards 0.6s; color: var(--danger-color); }
+
+        @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
+
+        /* কাস্টম পপআপ */
+        #customPopup {
+            position: fixed; top: 20%; left: -100%; width: 280px;
+            background: white; padding: 20px; border-radius: 0 15px 15px 0;
+            box-shadow: 10px 0 30px rgba(0,0,0,0.2); z-index: 1000;
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #customPopup.active { left: 0; }
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4); display: none; z-index: 999;
+        }
+
+        /* ফুটার */
+        footer { margin-top: auto; padding: 20px; font-size: 13px; color: #888; display: flex; align-items: center; gap: 15px; }
+        .back-btn { background: #ddd; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #333; text-decoration: none; }
     </style>
 </head>
 <body>
 
+    <header>
+        <span>DPI</span>
+        <span>Boi Baz</span>
+    </header>
+
     <div class="container">
-        <div class="section-card">
-            <h2>আমার প্রোফাইল <i class="fa-solid fa-user-pen edit-toggle" onclick="toggleProfileEdit(this)"></i></h2>
-            <label>নাম</label>
-            <input type="text" id="userName" class="profile-input">
-            
-            <label>ফোন নাম্বার (পরিবর্তনযোগ্য নয়)</label>
-            <input type="text" id="userPhoneDisplay" class="locked-phone">
-            
-            <label>পাসওয়ার্ড</label>
-            <input type="text" id="userPass" class="profile-input">
-            
-            <button id="saveProfileBtn" class="btn-save" onclick="updateProfile()">তথ্য আপডেট করুন</button>
+        <div class="avatar-circle" id="nameInitial">A</div>
+        
+        <div class="user-info">
+            <h1 id="displayName">ব্যক্তির নাম এখানে</h1>
+            <div class="info-item"><i class="fa-solid fa-envelope"></i> <span id="displayEmail">loading...</span></div>
+            <div class="info-item"><i class="fa-solid fa-phone"></i> <span id="displayPhone">loading...</span></div>
+            <div class="info-item">
+                <i class="fa-solid fa-key"></i> 
+                <span id="displayPass">******</span>
+                <i class="fa-solid fa-eye pass-toggle" onclick="togglePass()"></i>
+            </div>
         </div>
 
-        <div class="section-card">
-            <h2>আমার বইসমূহ <i class="fa-solid fa-pen-to-square edit-toggle" onclick="toggleBooksEdit(this)"></i></h2>
-            <div id="booksList">বই খোঁজা হচ্ছে...</div>
-        </div>
-
-        <button onclick="deleteAccount()" style="color:#999; background:none; border:none; cursor:pointer; font-size:12px; margin: 0 auto; display: block;">একাউন্ট মুছে ফেলুন</button>
-    </div>
-
-    <div class="bottom-nav">
-        <a href="index.html" class="home-btn" title="হোমে যান">
-            <i class="fa-solid fa-arrow-left"></i>
+        <a href="pedit.html" class="action-card card-1">
+            আপনার প্রোফাইল এডিট করুন <i class="fa-solid fa-chevron-right"></i>
         </a>
-        <a href="#" class="logout-btn" onclick="logoutUser()">
-            <i class="fa-solid fa-right-from-bracket"></i> লগআউট
+        <a href="bedit.html" class="action-card card-2">
+            আপনার দেওয়া বইসমূহ <i class="fa-solid fa-chevron-right"></i>
         </a>
-    </div>
-
-    <div id="statusModal">
-        <div class="modal-box">
-            <div id="modalIcon" style="font-size: 40px; margin-bottom: 10px;"></div>
-            <p id="modalText" style="font-weight: bold; color: #333;"></p>
-            <button onclick="location.reload()" style="background:#006747; color:white; border:none; padding:10px 25px; border-radius:8px; cursor:pointer; margin-top:15px;">ঠিক আছে</button>
+        <div class="action-card card-3" onclick="confirmDelete()">
+            আপনার একাউন্ট ডিলিট করুন <i class="fa-solid fa-trash-can"></i>
+        </div>
+        <div class="action-card card-4" onclick="logout()">
+            লগ আউট করুন <i class="fa-solid fa-right-from-bracket"></i>
         </div>
     </div>
+
+    <div class="overlay" id="overlay" onclick="closePopup()"></div>
+    <div id="customPopup">
+        <h3 id="popTitle" style="color:var(--primary-color)">টাইটেল</h3>
+        <p id="popMsg">মেসেজ এখানে...</p>
+        <button id="popActionBtn" style="background:var(--primary-color); color:white; border:none; padding:10px 20px; border-radius:8px; width:100%">ঠিক আছে</button>
+    </div>
+
+    <footer>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+        <span>© 2026 | A. H. SUJON</span>
+    </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, getDoc, updateDoc, collection, query, where, getDocs, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, deleteDoc, collection, query, where, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // আপডেট করা নতুন ডাটাবেজ কনফিগারেশন (Boi Baz v2)
         const firebaseConfig = {
-           apiKey: "AIzaSyDbtD45rBSZN5RUXCHijFiabZ0uKPYeya0",
+            apiKey: "AIzaSyDbtD45rBSZN5RUXCHijFiabZ0uKPYeya0",
             authDomain: "boi-baz.firebaseapp.com",
             projectId: "boi-baz",
             storageBucket: "boi-baz.firebasestorage.app",
@@ -120,110 +136,68 @@
         const db = getFirestore(app);
 
         const userId = localStorage.getItem('userId');
-        const currentPhone = localStorage.getItem('userPhone');
+        let realPass = "";
 
         if (!userId) window.location.href = "login.html";
 
-        window.toggleProfileEdit = (icon) => {
-            const inputs = document.querySelectorAll('.profile-input');
-            const saveBtn = document.getElementById('saveProfileBtn');
-            icon.classList.toggle('active');
-            inputs.forEach(input => input.classList.toggle('editable'));
-            saveBtn.style.display = icon.classList.contains('active') ? 'block' : 'none';
-        };
-
-        window.toggleBooksEdit = (icon) => {
-            const inputs = document.querySelectorAll('.book-input');
-            const saveBtns = document.querySelectorAll('.btn-book-save');
-            icon.classList.toggle('active');
-            inputs.forEach(input => input.classList.toggle('editable'));
-            saveBtns.forEach(btn => btn.style.display = icon.classList.contains('active') ? 'block' : 'none');
-        };
-
-        async function loadData() {
+        async function loadProfile() {
             const userRef = doc(db, "users", userId);
-            const userSnap = await getDoc(userRef);
-            if (userSnap.exists()) {
-                document.getElementById('userName').value = userSnap.data().name;
-                document.getElementById('userPass').value = userSnap.data().pass;
-                document.getElementById('userPhoneDisplay').value = userSnap.data().phone;
+            const snap = await getDoc(userRef);
+            if (snap.exists()) {
+                const data = snap.data();
+                document.getElementById('displayName').innerText = data.name;
+                document.getElementById('displayPhone').innerText = data.phone;
+                document.getElementById('displayEmail').innerText = data.email || "ইমেইল নেই";
+                document.getElementById('nameInitial').innerText = data.name.charAt(0);
+                realPass = data.pass;
             }
+        }
 
-            const q = query(collection(db, "books"), where("phone", "==", currentPhone));
-            const querySnapshot = await getDocs(q);
-            const list = document.getElementById('booksList');
-            list.innerHTML = "";
+        window.togglePass = () => {
+            const passSpan = document.getElementById('displayPass');
+            passSpan.innerText = passSpan.innerText === "******" ? realPass : "******";
+        };
 
-            if (querySnapshot.empty) {
-                list.innerHTML = "<p style='color:#999; font-size:12px;'>আপনার কোনো বই আপলোড করা নেই।</p>";
-                return;
-            }
+        window.showPopup = (title, msg, actionFn = null, isDanger = false) => {
+            document.getElementById('popTitle').innerText = title;
+            document.getElementById('popMsg').innerText = msg;
+            const btn = document.getElementById('popActionBtn');
+            btn.style.background = isDanger ? "#E03C31" : "#006747";
+            btn.onclick = actionFn ? () => { actionFn(); closePopup(); } : closePopup;
+            
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('customPopup').classList.add('active');
+        };
 
-            querySnapshot.forEach((doc) => {
-                const data = doc.data();
-                list.innerHTML += `
-                    <div class="book-item">
-                        <label>বইয়ের নাম</label>
-                        <input type="text" id="bn-${doc.id}" class="book-input" value="${data.bookName}">
-                        <label>প্রকাশনী</label>
-                        <input type="text" id="bp-${doc.id}" class="book-input" value="${data.publisher}">
-                        <button class="btn-save btn-book-save" onclick="updateBook('${doc.id}')">সেভ করুন</button>
-                        <span class="delete-btn" onclick="deleteBook('${doc.id}')"><i class="fa-solid fa-trash-can"></i> মুছে ফেলুন</span>
-                    </div>
-                `;
+        window.closePopup = () => {
+            document.getElementById('customPopup').classList.remove('active');
+            setTimeout(() => { document.getElementById('overlay').style.display = 'none'; }, 500);
+        };
+
+        window.confirmDelete = () => {
+            showPopup("সতর্কতা!", "আপনি কি নিশ্চিতভাবে একাউন্ট ডিলিট করতে চান? সব বই মুছে যাবে।", processDeletion, true);
+        };
+
+        async function processDeletion() {
+            const phone = document.getElementById('displayPhone').innerText;
+            const q = query(collection(db, "books"), where("phone", "==", phone));
+            const snap = await getDocs(q);
+            const batch = writeBatch(db);
+            snap.forEach(d => batch.delete(d.ref));
+            await batch.commit();
+            await deleteDoc(doc(db, "users", userId));
+            localStorage.clear();
+            window.location.href = "index.html";
+        }
+
+        window.logout = () => {
+            showPopup("লগআউট", "আপনি কি লগআউট করতে চান?", () => {
+                localStorage.clear();
+                window.location.href = "index.html";
             });
-        }
-
-        window.updateProfile = async () => {
-            const name = document.getElementById('userName').value;
-            const pass = document.getElementById('userPass').value;
-            await updateDoc(doc(db, "users", userId), { name, pass });
-            localStorage.setItem('userName', name);
-            showModal("✅", "প্রোফাইল আপডেট হয়েছে।");
         };
 
-        window.updateBook = async (id) => {
-            const bName = document.getElementById(`bn-${id}`).value;
-            const bPub = document.getElementById(`bp-${id}`).value;
-            await updateDoc(doc(db, "books", id), { bookName: bName, publisher: bPub });
-            showModal("✅", "বইয়ের তথ্য আপডেট হয়েছে।");
-        };
-
-        window.deleteBook = async (id) => {
-            if(confirm("বইটি মুছে ফেলবেন?")) {
-                await deleteDoc(doc(db, "books", id));
-                showModal("🗑️", "বইটি মুছে ফেলা হয়েছে।");
-            }
-        };
-
-        window.deleteAccount = async () => {
-            if(confirm("সাবধান! আপনার একাউন্ট ও সকল বই মুছে যাবে।")) {
-                const q = query(collection(db, "books"), where("phone", "==", currentPhone));
-                const snap = await getDocs(q);
-                const batch = writeBatch(db);
-                snap.forEach(d => batch.delete(d.ref));
-                await batch.commit();
-                await deleteDoc(doc(db, "users", userId));
-                localStorage.clear();
-                window.location.href = "index.html";
-            }
-        };
-
-        window.logoutUser = () => {
-            if(confirm("লগআউট করতে চান?")) {
-                localStorage.clear();
-                window.location.href = "index.html";
-            }
-        };
-
-        function showModal(icon, msg) {
-            document.getElementById('modalIcon').innerText = icon;
-            document.getElementById('modalText').innerText = msg;
-            document.getElementById('statusModal').style.display = 'flex';
-        }
-
-        loadData();
+        loadProfile();
     </script>
 </body>
-
 </html>
