@@ -57,7 +57,7 @@
         .footer-link { margin-top: 15px; font-size: 14px; color: #666; }
         .footer-link a { color: #E03C31; text-decoration: none; font-weight: bold; }
 
-        /* পপআপ ডিজাইন */
+        /* পপআপ ডিজাইন ও অ্যানিমেশন */
         .status-modal { 
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); 
@@ -66,7 +66,23 @@
         .modal-box { 
             background: white; padding: 30px; border-radius: 20px; width: 88%; 
             max-width: 340px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
         }
+
+        /* অ্যানিমেশন ক্লাস */
+        .slide-in { animation: slideInLeft 0.5s forwards; }
+        .slide-out { animation: slideOutRight 0.5s forwards; }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(-150%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(150%); opacity: 0; }
+        }
+
         .contact-icons { display: flex; justify-content: center; gap: 30px; margin: 15px 0; }
         .contact-icons a { font-size: 40px; text-decoration: none; }
     </style>
@@ -92,7 +108,7 @@
         </div>
 
         <div style="display:flex; align-items:center; gap:10px; color:#999; font-size:12px;">
-            <hr style="flex:1; border:0; border-top:1px solid #eee;"> অথবা ফোন নাম্বার দিয়ে <hr style="flex:1; border:0; border-top:1px solid #eee;">
+            <hr style="flex:1; border:0; border-top:1px solid #eee;"> অথবা ফোন নাম্বার দিয়ে <hr style="flex:1; border:0; border-top:1px solid #eee;">
         </div>
 
         <div class="phone-container">
@@ -130,7 +146,19 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // গুগল ইমেইল রেসপন্স হ্যান্ডেলার
+        // পপআপ বন্ধ করার ফাংশন (অ্যানিমেশনসহ)
+        window.closeModal = () => {
+            const modalBox = document.querySelector('.modal-box');
+            modalBox.classList.remove('slide-in');
+            modalBox.classList.add('slide-out');
+            
+            // অ্যানিমেশন শেষ হওয়ার পর হাইড করা
+            setTimeout(() => {
+                document.getElementById('statusModal').style.display = 'none';
+                modalBox.classList.remove('slide-out');
+            }, 450);
+        };
+
         window.handleCredentialResponse = async (response) => {
             const payload = JSON.parse(atob(response.credential.split('.')[1]));
             const email = payload.email;
@@ -152,11 +180,12 @@
             const content = document.getElementById('modalContent');
             content.innerHTML = `
                 <div style="font-size: 50px;">😊</div>
-                <h3>অ্যাকাউন্ট পাওয়া গেছে!</h3>
+                <h3>অ্যাকাউন্ট পাওয়া গেছে!</h3>
                 <p>আপনার <b>'${name}'</b> নামে একটি অ্যাকাউন্ট রয়েছে। আপনি কি লগইন করতে চান?</p>
                 <button class="btn" id="yesBtn">হ্যাঁ, লগইন করি</button>
                 <button class="btn" style="background:#eee; color:#333;" onclick="closeModal()">না</button>
             `;
+            content.classList.add('slide-in');
             modal.style.display = 'flex';
             document.getElementById('yesBtn').onclick = () => {
                 localStorage.setItem('userId', id);
@@ -174,6 +203,7 @@
                 <p>আপনার এই ইমেইল দ্বারা অ্যাকাউন্ট খোলা নেই। দয়া করে ফোন নম্বর দ্বারা লগইন করুন অথবা নতুন তৈরি করুন।</p>
                 <button class="btn" onclick="showAdminContact()">ঠিক আছে</button>
             `;
+            content.classList.add('slide-in');
             modal.style.display = 'flex';
         }
 
@@ -188,9 +218,11 @@
                 </div>
                 <button class="btn" onclick="closeModal()">বন্ধ করুন</button>
             `;
+            // কন্টেন্ট রিপ্লেস করার সময় আবার ইন অ্যানিমেশন
+            content.classList.remove('slide-in');
+            setTimeout(() => content.classList.add('slide-in'), 10);
         };
 
-        // ফোন লগইন লজিক
         window.handleLogin = async function() {
             const phone = document.getElementById('phone').value;
             const pass = document.getElementById('pass').value;
@@ -206,7 +238,7 @@
                 localStorage.setItem('userName', snap.docs[0].data().name);
                 window.location.href = "index.html";
             } else {
-                alert("ভুল নম্বর বা পাসওয়ার্ড!");
+                alert("ভুল নম্বর বা পাসওয়ার্ড!");
             }
         };
 
@@ -214,8 +246,6 @@
             const p = document.getElementById('pass');
             p.type = p.type === 'password' ? 'text' : 'password';
         };
-
-        window.closeModal = () => document.getElementById('statusModal').style.display = 'none';
     </script>
 </body>
 </html>
