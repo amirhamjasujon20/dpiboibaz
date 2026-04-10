@@ -6,106 +6,156 @@
     <title>Advanced Admin - DPI Boi Baz</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #006747; --danger: #E03C31; --bg: #f0f2f5; --white: #ffffff; }
+        :root { --primary: #006747; --danger: #E03C31; --bg: #f0f2f5; --white: #ffffff; --edit: #2196F3; --stat-user: #3498db; --stat-book: #f39c12; }
         body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: var(--bg); padding-bottom: 50px; }
         
         /* লগইন সেকশন */
-        #loginSection { 
-            display: flex; justify-content: center; align-items: center; height: 100vh; background: var(--primary);
-        }
+        #loginSection { display: flex; justify-content: center; align-items: center; height: 100vh; background: var(--primary); }
         .login-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); width: 90%; max-width: 350px; text-align: center; }
         .login-card input { width: 100%; padding: 12px; margin: 15px 0; border: 1px solid #ddd; border-radius: 30px; outline: none; text-align: center; font-size: 16px; box-sizing: border-box; }
         .login-btn { background: var(--primary); color: white; border: none; padding: 12px 30px; border-radius: 30px; cursor: pointer; font-weight: bold; width: 100%; }
 
-        /* ড্যাশবোর্ড হেডার */
-        header { background: var(--primary); color: white; padding: 15px; text-align: center; max-width: 800px; margin: 10px auto; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        header h1 { margin: 0; font-size: 22px; }
+       header {
+    background: var(--primary);
+    color: white;
+    padding: 5px; /* ১৫ থেকে কমিয়ে ৮ বা ১০ করুন */
+    text-align: center;
+    max-width: 600px; /* ৮০০ থেকে কমিয়ে ৬০০ করুন (সার্চ বক্সের সমান) */
+    margin: 5px auto; /* ১০ থেকে কমিয়ে ৫ করুন */
+    border-radius: 30px; /* ১৫ থেকে কমিয়ে ১০ করুন */
+    font-size: 10px;
+}
+        
+        /* স্ট্যাটাস কার্ড সেকশন */
+        .stats-container { display: flex; gap: 15px; max-width: 600px; margin: 10px auto; padding: 0 10px; box-sizing: border-box; }
+        .stat-card { flex: 1; background: white; padding: 15px; border-radius: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-bottom: 4px solid #ccc; transition: 0.3s; }
+        .stat-card:hover { transform: translateY(-3px); }
+        .stat-card.users { border-color: var(--stat-user); }
+        .stat-card.books { border-color: var(--stat-book); }
+        .stat-card i { font-size: 18px; margin-bottom: 5px; }
+        .stat-card.users i { color: var(--stat-user); }
+        .stat-card.books i { color: var(--stat-book); }
+        .stat-card h3 { margin: 0; font-size: 20px; color: #333; }
+        .stat-card p { margin: 2px 0 0; font-size: 11px; color: #666; font-weight: bold; }
 
-        .search-container { padding: 10px; max-width: 600px; margin: auto; position: sticky; top: 0; z-index: 99; }
-        .search-box { width: 100%; padding: 12px 20px; border-radius: 30px; border: 2px solid #ddd; font-size: 16px; outline: none; background: white; box-sizing: border-box; }
+        .search-container { padding: 10px; max-width: 600px; margin: auto; position: sticky; top: 0; z-index: 99; background: var(--bg); }
+        .search-box { width: 100%; padding: 12px 20px; border-radius: 30px; border: 2px solid #ddd; outline: none; background: white; box-sizing: border-box; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .search-box:focus { border-color: var(--primary); }
 
         .admin-container { padding: 10px; max-width: 800px; margin: auto; }
-        .list-item { background: white; display: flex; justify-content: space-between; align-items: center; padding: 15px; border-radius: 12px; margin-bottom: 10px; cursor: pointer; border-left: 5px solid var(--primary); transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .list-item:hover { transform: scale(1.01); }
+        .list-item { background: white; display: flex; justify-content: space-between; align-items: center; padding: 15px; border-radius: 12px; margin-bottom: 10px; cursor: pointer; border-left: 5px solid var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: 0.2s; }
+        .list-item:hover { transform: translateX(3px); background: #f9f9f9; }
         .info b { display: block; color: #222; font-size: 16px; }
         .info span { font-size: 13px; color: #666; }
 
-        /* পপআপ/মডাল স্টাইল */
+        /* মডাল স্টাইল */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; padding: 15px; box-sizing: border-box; backdrop-filter: blur(5px); }
-        .modal-content { background: white; width: 100%; max-width: 500px; border-radius: 20px; max-height: 90vh; overflow-y: auto; position: relative; animation: slideUp 0.3s ease-out; }
+        .modal-content { background: white; width: 100%; max-width: 500px; border-radius: 20px; max-height: 90vh; overflow-y: auto; position: relative; animation: slideUp 0.3s ease-out; box-shadow: 0 15px 40px rgba(0,0,0,0.3); }
         @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         
         .modal-header { background: var(--primary); color: white; padding: 20px; text-align: center; position: sticky; top: 0; z-index: 10; }
         .close-modal { position: absolute; top: 15px; left: 20px; color: white; font-size: 22px; cursor: pointer; }
-        .edit-icon-btn { position: absolute; top: 15px; right: 20px; color: white; font-size: 20px; cursor: pointer; }
+        .edit-user-icon { position: absolute; top: 15px; right: 20px; color: white; font-size: 20px; cursor: pointer; }
         
         .section-title { font-size: 15px; font-weight: bold; color: var(--primary); margin: 15px 0 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
         .user-details, .edit-form, .book-section { padding: 20px; }
         .user-details p { margin: 8px 0; font-size: 14px; color: #444; }
+        
+        /* বুক কার্ড স্টাইল */
+        .book-row { background: #f8f9fa; padding: 12px; border-radius: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #eee; transition: 0.2s; }
+        .book-row:hover { background: #f1f3f5; }
+        .book-info { font-size: 14px; color: #333; }
+        .book-actions { display: flex; gap: 15px; align-items: center; }
+        .book-edit-btn { color: var(--edit); cursor: pointer; font-size: 16px; transition: 0.2s; }
+        .book-edit-btn:hover { transform: scale(1.1); }
+        .book-del-btn { color: var(--danger); cursor: pointer; font-size: 16px; transition: 0.2s; }
+        .book-del-btn:hover { transform: scale(1.1); }
 
         /* ইনপুট স্টাইল */
-        label { font-size: 12px; font-weight: bold; color: #777; margin-left: 5px; }
-        input[type="text"], input[type="email"] { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; background: #f9f9f9; }
-        input:focus { border-color: var(--primary); background: white; outline: none; }
-
-        .book-card-edit { background: #f8f9fa; padding: 12px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #eee; position: relative; }
-        .btn-update { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 10px; }
-        .delete-btn { color: var(--danger); cursor: pointer; font-size: 18px; }
-        .book-del-icon { position: absolute; top: 10px; right: 10px; color: var(--danger); cursor: pointer; }
+        label { font-size: 12px; font-weight: bold; color: #666; margin-left: 5px; }
+        input[type="text"] { width: 100%; padding: 11px; margin-top: 4px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; background: #fbfbfb; transition: 0.2s; }
+        input[type="text"]:focus { border-color: var(--primary); background: white; outline: none; box-shadow: 0 0 0 3px rgba(0,103,71,0.1); }
+        .btn-update { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 10px; font-size: 15px; transition: 0.2s; }
+        .btn-update:hover { background: #00563b; }
 
         #adminContent { display: none; }
+        
+        @media (max-width: 500px) {
+            .stats-container { gap: 10px; padding: 0 5px; }
+            .stat-card { padding: 12px; }
+            .stat-card h3 { font-size: 20px; }
+            .stat-card p { font-size: 11px; }
+            .stat-card i { font-size: 20px; }
+        }
     </style>
 </head>
 <body>
 
 <div id="loginSection">
     <div class="login-card">
-        <h2 style="color:var(--primary); margin:0;">Admin Login</h2>
-        <input type="password" id="adminPass" placeholder="পাসওয়ার্ড দিন...">
+        <h2 style="color:var(--primary); margin:0; font-size: 24px;">Admin Login</h2>
+        <p style="color:#666; font-size: 13px; margin: 5px 0 15px;">DPI Boi Baz Dashboard</p>
+        <input type="password" id="adminPass" placeholder="পাসওয়ার্ড দিন">
         <button class="login-btn" onclick="login()">প্রবেশ করুন</button>
     </div>
 </div>
 
 <div id="adminContent">
-    <header>
-        <h1>DPI Boi Baz Admin Control</h1>
-    </header>
+    <header><h1>DPI Boi Baz Admin</h1></header>
+    
+    <div class="stats-container">
+        <div class="stat-card users">
+            <i class="fa-solid fa-users"></i>
+            <h3 id="totalUsersStat">০</h3>
+            <p>মোট অ্যাকাউন্ট</p>
+        </div>
+        <div class="stat-card books">
+            <i class="fa-solid fa-book"></i>
+            <h3 id="totalBooksStat">০</h3>
+            <p>মোট বই</p>
+        </div>
+    </div>
 
     <div class="search-container">
         <input type="text" id="searchInput" class="search-box" placeholder="নাম বা ফোন দিয়ে খুঁজুন...">
     </div>
-
-    <div class="admin-container">
-        <div id="userList">লোড হচ্ছে...</div>
-    </div>
+    
+    <div class="admin-container" id="userList">লোড হচ্ছে...</div>
 </div>
 
 <div id="userModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
             <span class="close-modal" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></span>
-            <h3 id="m_title">প্রোফাইল ডিটেইলস</h3>
-            <span class="edit-icon-btn" onclick="toggleEdit()"><i class="fa-solid fa-user-pen"></i></span>
+            <h3 id="modalUserName">নাম লোড হচ্ছে...</h3>
+            <span class="edit-user-icon" onclick="toggleUserEdit()"><i class="fa-solid fa-user-pen"></i></span>
         </div>
 
-        <div id="viewSection">
-            <div class="user-details" id="userDetailsDisplay"></div>
+        <div id="userMainView">
+            <div class="user-details">
+                <div id="viewData"></div>
+                <div id="editUserData" style="display:none;">
+                    <div class="section-title" style="margin-top:0;">ইউজার তথ্য এডিট</div>
+                    <label>নাম:</label><input type="text" id="editName">
+                    <label>ফোন:</label><input type="text" id="editPhone">
+                    <label>পাসওয়ার্ড:</label><input type="text" id="editPass">
+                    <button class="btn-update" onclick="saveUserOnly()">ইউজার আপডেট করুন</button>
+                </div>
+            </div>
+            
             <div class="book-section">
-                <div class="section-title"><i class="fa-solid fa-book"></i> আপলোডকৃত বইসমূহ</div>
-                <div id="bookListDisplay">বই লোড হচ্ছে...</div>
+                <div class="section-title"><i class="fa-solid fa-book"></i> বইয়ের তালিকা</div>
+                <div id="bookListArea">লোড হচ্ছে...</div>
             </div>
         </div>
 
-        <div id="editSection" style="display:none;" class="edit-form">
-            <div class="section-title">ইউজার তথ্য এডিট</div>
-            <label>নাম:</label> <input type="text" id="editName">
-            <label>ফোন:</label> <input type="text" id="editPhone">
-            <label>পাসওয়ার্ড:</label> <input type="text" id="editPass">
-            
-            <div class="section-title">বইসমূহ এডিট</div>
-            <div id="editBookItems"></div>
-
-            <button class="btn-update" onclick="saveAllChanges()">সব আপডেট সেভ করুন</button>
+        <div id="bookEditSection" style="display:none;" class="edit-form">
+            <div class="section-title" style="margin-top:0;">বইয়ের তথ্য পরিবর্তন</div>
+            <input type="hidden" id="editingBookId">
+            <label>বইয়ের নাম:</label><input type="text" id="ebName">
+            <label>পাবলিকেশন:</label><input type="text" id="ebPub">
+            <button class="btn-update" onclick="saveBookEdit()">বই আপডেট করুন</button>
+            <button class="btn-update" style="background:#6c757d;" onclick="closeBookEdit()">বাতিল</button>
         </div>
     </div>
 </div>
@@ -125,183 +175,189 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    let allUsers = [], currentU = null, userBooks = [];
 
-    let allUsers = [];
-    let currentUserId = null;
-    let currentUserBooks = [];
-
-    // লগইন ফাংশন
-    window.login = () => {
-        const pass = document.getElementById('adminPass').value;
-        if(pass === "19378240") {
-            document.getElementById('loginSection').style.display = 'none';
-            document.getElementById('adminContent').style.display = 'block';
-            startListening();
-        } else {
-            alert("ভুল পাসওয়ার্ড!");
-        }
-    };
-
-    // ডেটা লিসেনার
-    function startListening() {
-        onSnapshot(collection(db, "users"), (snapshot) => {
-            allUsers = snapshot.docs.map(d => ({id: d.id, ...d.data()}));
-            // সর্টিং: নতুন আগে, যাদের ডেট নেই তারা শেষে
-            allUsers.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
-            renderUsers(allUsers);
-        });
-    }
-
-    function renderUsers(users) {
-        const listDiv = document.getElementById('userList');
-        listDiv.innerHTML = users.length ? "" : "কোনো ইউজার পাওয়া যায়নি।";
-        users.forEach(user => {
-            const div = document.createElement('div');
-            div.className = 'list-item';
-            div.onclick = () => openUserModal(user);
-            div.innerHTML = `
-                <div class="info">
-                    <b>${user.name || 'নামহীন'}</b>
-                    <span><i class="fa-solid fa-phone"></i> ${user.phone}</span>
-                </div>
-                <i class="fa-solid fa-trash-can delete-btn" onclick="event.stopPropagation(); deleteFullUser('${user.id}', '${user.phone}')"></i>
-            `;
-            listDiv.appendChild(div);
-        });
-    }
-
-    // ইউজার সার্চ
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-        const term = e.target.value.toLowerCase();
-        const filtered = allUsers.filter(u => u.name?.toLowerCase().includes(term) || u.phone?.includes(term));
-        renderUsers(filtered);
+    // এনটার কিHandler লগইনের জন্য
+    document.getElementById('adminPass').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') login();
     });
 
-    // মডাল ওপেন
-    async function openUserModal(user) {
-        currentUserId = user.id;
-        document.getElementById('m_title').innerText = "প্রোফাইল ডিটেইলস";
-        document.getElementById('viewSection').style.display = 'block';
-        document.getElementById('editSection').style.display = 'none';
+    window.login = () => {
+        if(document.getElementById('adminPass').value === "19378240") {
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('adminContent').style.display = 'block';
+            startApp();
+        } else alert("ভুল পাসওয়ার্ড!");
+    };
 
-        // ডিটেইলস সেট
-        const dateStr = user.createdAt ? new Date(user.createdAt.toMillis()).toLocaleString('bn-BD') : "অজানা";
-        document.getElementById('userDetailsDisplay').innerHTML = `
-            <p><i class="fa-solid fa-user"></i> <b>নাম:</b> ${user.name}</p>
-            <p><i class="fa-solid fa-phone"></i> <b>ফোন:</b> ${user.phone}</p>
-            <p><i class="fa-solid fa-key"></i> <b>পাসওয়ার্ড:</b> ${user.pass}</p>
-            <p><i class="fa-solid fa-calendar-days"></i> <b>জয়েনিং:</b> ${dateStr}</p>
-        `;
-
-        // বই লোড করা
-        const bookDisplay = document.getElementById('bookListDisplay');
-        bookDisplay.innerHTML = "খোঁজা হচ্ছে...";
-        const q = query(collection(db, "books"), where("phone", "==", user.phone));
-        const snap = await getDocs(q);
-        currentUserBooks = snap.docs.map(d => ({id: d.id, ...d.data()}));
-
-        bookDisplay.innerHTML = currentUserBooks.length ? "" : "কোনো বই আপলোড করেনি।";
-        currentUserBooks.forEach(b => {
-            bookDisplay.innerHTML += `
-                <div style="background:#eee; padding:8px; border-radius:8px; margin-bottom:5px; font-size:13px;">
-                    📗 <b>${b.bookName}</b> (${b.publisher || 'N/A'})
-                </div>
-            `;
+    function startApp() {
+        // লাইভ ইউজার লিসেনার এবং সর্টিং
+        onSnapshot(collection(db, "users"), (snap) => {
+            allUsers = snap.docs.map(d => ({id: d.id, ...d.data()}));
+            allUsers.sort((a,b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
+            renderUsers(allUsers);
+            
+            // স্ট্যাটাস আপডেট
+            document.getElementById('totalUsersStat').innerText = allUsers.length.toLocaleString('bn-BD');
         });
+        
+        // লাইভ বুক কাউন্টার লিসেনার
+        onSnapshot(collection(db, "books"), (snap) => {
+            document.getElementById('totalBooksStat').innerText = snap.size.toLocaleString('bn-BD');
+        });
+    }
 
+    function renderUsers(data) {
+        const list = document.getElementById('userList');
+        if(data.length === 0) {
+            list.innerHTML = "<p style='text-align:center; color:#666; margin-top:20px;'>কোনো ইউজার পাওয়া যায়নি।</p>";
+            return;
+        }
+        list.innerHTML = "";
+        data.forEach(u => {
+            const div = document.createElement('div');
+            div.className = 'list-item';
+            div.onclick = () => openModal(u);
+            div.innerHTML = `
+                <div class="info"><b>${u.name || 'নামহীন'}</b><span><i class="fa-solid fa-phone"></i> ${u.phone}</span></div>
+                <i class="fa-solid fa-trash-can book-del-btn" onclick="event.stopPropagation(); deleteUser('${u.id}', '${u.phone}')"></i>
+            `;
+            list.appendChild(div);
+        });
+    }
+
+    async function openModal(user) {
+        currentU = user;
+        document.getElementById('modalUserName').innerText = user.name || 'নামহীন';
+        document.getElementById('editUserData').style.display = 'none';
+        document.getElementById('viewData').style.display = 'block';
+        document.getElementById('viewData').innerHTML = `
+            <p><b><i class="fa-solid fa-phone" style="width:20px;color:var(--primary)"></i> ফোন:</b> ${user.phone}</p>
+            <p><b><i class="fa-solid fa-key" style="width:20px;color:var(--primary)"></i> পাসওয়ার্ড:</b> ${user.pass}</p>
+            <p><b><i class="fa-solid fa-clock" style="width:20px;color:var(--primary)"></i> জয়েনিং:</b> ${user.createdAt ? new Date(user.createdAt.toMillis()).toLocaleString('bn-BD') : 'N/A'}</p>
+        `;
+        
+        loadBooks(user.phone);
         document.getElementById('userModal').style.display = 'flex';
     }
 
-    // এডিট মোড টগল
-    window.toggleEdit = () => {
-        const view = document.getElementById('viewSection');
-        const edit = document.getElementById('editSection');
-        if(view.style.display === 'block') {
-            view.style.display = 'none';
-            edit.style.display = 'block';
-            document.getElementById('m_title').innerText = "এডিট মোড";
-            
-            // ইনপুট ফিল্ডে ভ্যালু বসানো
-            const user = allUsers.find(u => u.id === currentUserId);
-            document.getElementById('editName').value = user.name;
-            document.getElementById('editPhone').value = user.phone;
-            document.getElementById('editPass').value = user.pass;
-
-            // বই এডিট লিস্ট তৈরি
-            const editBooksDiv = document.getElementById('editBookItems');
-            editBooksDiv.innerHTML = currentUserBooks.length ? "" : "বই নেই।";
-            currentUserBooks.forEach(b => {
-                editBooksDiv.innerHTML += `
-                    <div class="book-card-edit">
-                        <i class="fa-solid fa-trash-can book-del-icon" onclick="deleteBookItem('${b.id}')"></i>
-                        <label>বইয়ের নাম:</label>
-                        <input type="text" id="bname-${b.id}" value="${b.bookName}">
-                        <label>পাবলিকেশন:</label>
-                        <input type="text" id="bpub-${b.id}" value="${b.publisher || ''}">
+    async function loadBooks(phone) {
+        const area = document.getElementById('bookListArea');
+        area.innerHTML = "লোড হচ্ছে...";
+        const q = query(collection(db, "books"), where("phone", "==", phone));
+        const snap = await getDocs(q);
+        userBooks = snap.docs.map(d => ({id: d.id, ...d.data()}));
+        area.innerHTML = userBooks.length ? "" : "<p style='color:#666;font-size:13px;margin:0;'>কোনো বই আপলোড করেনি।</p>";
+        userBooks.forEach(b => {
+            area.innerHTML += `
+                <div class="book-row">
+                    <div class="book-info">📗 <b>${b.bookName}</b><br><small style="color:#666;">${b.publisher || 'পাবলিকেশন নেই'}</small></div>
+                    <div class="book-actions">
+                        <i class="fa-solid fa-pen-to-square book-edit-btn" title="এডিট করুন" onclick="openBookEdit('${b.id}')"></i>
+                        <i class="fa-solid fa-trash-can book-del-btn" title="ডিলিট করুন" onclick="deleteBook('${b.id}')"></i>
                     </div>
-                `;
-            });
+                </div>
+            `;
+        });
+    }
+
+    window.toggleUserEdit = () => {
+        const editDiv = document.getElementById('editUserData');
+        const viewDiv = document.getElementById('viewData');
+        if(editDiv.style.display === 'none') {
+            editDiv.style.display = 'block';
+            viewDiv.style.display = 'none';
+            document.getElementById('editName').value = currentU.name || '';
+            document.getElementById('editPhone').value = currentU.phone;
+            document.getElementById('editPass').value = currentU.pass;
         } else {
-            view.style.display = 'block';
-            edit.style.display = 'none';
+            editDiv.style.display = 'none';
+            viewDiv.style.display = 'block';
         }
     };
 
-    // সব পরিবর্তন সেভ করা (ব্যাচ আপডেট)
-    window.saveAllChanges = async () => {
-        const newName = document.getElementById('editName').value;
-        const newPhone = document.getElementById('editPhone').value;
-        const newPass = document.getElementById('editPass').value;
+    window.saveUserOnly = async () => {
+        const nName = document.getElementById('editName').value.trim();
+        const nPhone = document.getElementById('editPhone').value.trim();
+        const nPass = document.getElementById('editPass').value.trim();
+        
+        if(!nPhone || !nPass) { alert("ফোন এবং পাসওয়ার্ড বাধ্যতামূলক!"); return; }
 
         try {
             const batch = writeBatch(db);
-            
-            // ১. ইউজার আপডেট
-            batch.update(doc(db, "users", currentUserId), {
-                name: newName, phone: newPhone, pass: newPass
-            });
-
-            // ২. বই আপডেট
-            currentUserBooks.forEach(b => {
-                const bName = document.getElementById(`bname-${b.id}`).value;
-                const bPub = document.getElementById(`bpub-${b.id}`).value;
-                batch.update(doc(db, "books", b.id), {
-                    bookName: bName,
-                    publisher: bPub,
-                    phone: newPhone, // ইউজারের নতুন ফোন নাম্বার আপডেট
-                    sellerName: newName // ইউজারের নতুন নাম আপডেট
-                });
-            });
-
+            // ইউজার আপডেট
+            batch.update(doc(db, "users", currentU.id), { name: nName, phone: nPhone, pass: nPass });
+            // ইউজারের সব বইয়ের সেলার তথ্য আপডেট (ফোন ও নাম)
+            userBooks.forEach(b => batch.update(doc(db, "books", b.id), { phone: nPhone, sellerName: nName }));
             await batch.commit();
-            alert("সব তথ্য আপডেট হয়েছে!");
+            alert("ইউজার তথ্য আপডেট হয়েছে!");
             closeModal();
-        } catch (e) { alert("Error: " + e.message); }
+        } catch(e) { alert("Error: " + e.message); }
     };
 
-    // ডিলিট ফাংশন
-    window.deleteFullUser = async (id, phone) => {
-        if(confirm("এই ইউজার এবং তার সকল বই মুছে ফেলতে চান?")) {
-            const q = query(collection(db, "books"), where("phone", "==", phone));
-            const snap = await getDocs(q);
-            const batch = writeBatch(db);
-            snap.forEach(d => batch.delete(d.ref));
-            await batch.commit();
-            await deleteDoc(doc(db, "users", id));
+    window.openBookEdit = (bid) => {
+        const book = userBooks.find(b => b.id === bid);
+        document.getElementById('userMainView').style.display = 'none';
+        document.getElementById('bookEditSection').style.display = 'block';
+        document.getElementById('editingBookId').value = bid;
+        document.getElementById('ebName').value = book.bookName;
+        document.getElementById('ebPub').value = book.publisher || "";
+    };
+
+    window.closeBookEdit = () => {
+        document.getElementById('userMainView').style.display = 'block';
+        document.getElementById('bookEditSection').style.display = 'none';
+    };
+
+    window.saveBookEdit = async () => {
+        const bid = document.getElementById('editingBookId').value;
+        const nBName = document.getElementById('ebName').value.trim();
+        const nBPub = document.getElementById('ebPub').value.trim();
+        
+        if(!nBName) { alert("বইয়ের নাম বাধ্যতামূলক!"); return; }
+
+        try {
+            await updateDoc(doc(db, "books", bid), {
+                bookName: nBName,
+                publisher: nBPub
+            });
+            alert("বইয়ের তথ্য আপডেট হয়েছে!");
+            closeBookEdit();
+            loadBooks(currentU.phone); // বইয়ের লিস্ট রিফ্রেশ
+        } catch(e) { alert("Error: " + e.message); }
+    };
+
+    window.deleteBook = async (bid) => {
+        if(confirm("বইটি কি নিশ্চিতভাবে মুছে ফেলবেন?")) {
+            await deleteDoc(doc(db, "books", bid));
+            loadBooks(currentU.phone);
         }
     };
 
-    window.deleteBookItem = async (bid) => {
-        if(confirm("বইটি কি ডিলিট করবেন?")) {
-            await deleteDoc(doc(db, "books", bid));
-            alert("বই মুছে ফেলা হয়েছে।");
-            closeModal();
+    window.deleteUser = async (id, phone) => {
+        if(confirm("সাবধান! এই ইউজার এবং তার আপলোড করা সব বই মুছে যাবে। নিশ্চিত?")) {
+            const q = query(collection(db, "books"), where("phone", "==", phone));
+            const snap = await getDocs(q);
+            const batch = writeBatch(db);
+            snap.forEach(d => batch.delete(d.ref)); // সব বই ডিলিট
+            await batch.commit();
+            await deleteDoc(doc(db, "users", id)); // ইউজার ডিলিট
         }
     };
 
     window.closeModal = () => document.getElementById('userModal').style.display = 'none';
+    
+    // মডালের বাইরে ক্লিক করলে বন্ধ হবে
     window.onclick = (e) => { if(e.target.className === 'modal') closeModal(); };
 
+    // সার্চ ফাংশন
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        renderUsers(allUsers.filter(u => 
+            (u.name && u.name.toLowerCase().includes(term)) || 
+            u.phone.includes(term)
+        ));
+    });
 </script>
 </body>
 </html>
