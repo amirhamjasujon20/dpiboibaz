@@ -7,175 +7,558 @@
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="manifest" href="manifest.json">
     <style>
-        body { 
-            font-family: 'Arial', sans-serif; 
-            background: radial-gradient(circle, rgba(224, 60, 49, 0.1) 20%, rgba(0, 103, 71, 0.1) 100%);
-            min-height: 100vh; margin: 0; display: flex; justify-content: center; align-items: center; padding: 20px;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: radial-gradient(circle, rgba(224,60,49,0.08) 20%, rgba(0,103,71,0.08) 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
         }
-        .sell-card {
-            background: white; padding: 30px; border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center;
+
+        .main-card {
+            background: white;
+            padding: 24px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
         }
-        h2 { color: #006747; margin-bottom: 20px; }
-        .user-info { background: #f0fdf4; padding: 10px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #dcfce7; }
-        .user-info p { margin: 5px 0; font-size: 14px; color: #166534; font-weight: bold; }
-        select, input { 
-            width: 100%; padding: 12px; margin: 10px 0; border: 1.5px solid #eee; 
-            border-radius: 10px; box-sizing: border-box; outline: none; font-size: 16px;
+
+        h2 {
+            color: #006747;
+            margin-bottom: 16px;
+            font-size: 22px;
+            text-align: center;
         }
-        input:focus { border-color: #006747; }
-        .btn-submit { 
-            width: 100%; background: #E03C31; color: white; border: none; padding: 15px; 
-            border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s;
+
+        .user-info {
+            background: #f0fdf4;
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #dcfce7;
+        }
+        .user-info p { margin: 3px 0; font-size: 14px; color: #166534; font-weight: bold; }
+
+        /* বই কার্ড — মোটা বর্ডার দিয়ে আলাদা */
+        .book-card {
+            background: #ffffff;
+            border: 3px solid #006747;
+            border-radius: 18px;
+            padding: 18px;
+            margin-bottom: 18px;
+            position: relative;
+        }
+
+        .book-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed #c8e6c9;
+        }
+
+        .book-card-title {
+            font-size: 14px;
+            color: #006747;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .book-number-badge {
+            background: #006747;
+            color: white;
+            font-size: 11px;
+            padding: 3px 12px;
+            border-radius: 20px;
+        }
+
+        .one-book-badge {
+            font-size: 10px;
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 3px 8px;
+        }
+
+        .btn-remove {
+            background: #fff5f5;
+            color: #E03C31;
+            border: 1.5px solid #ffcccc;
+            border-radius: 8px;
+            padding: 5px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .btn-remove:hover { background: #E03C31; color: white; border-color: #E03C31; }
+
+        /* লেবেল ও নোট */
+        .field-label {
+            font-size: 12px;
+            color: #444;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .field-note {
+            font-size: 11px;
+            color: #E03C31;
+            margin-bottom: 5px;
+            display: block;
+            font-style: italic;
+        }
+
+        /* ইনপুট ও সিলেক্ট */
+        input, select {
+            width: 100%;
+            padding: 11px 14px;
+            margin-bottom: 12px;
+            border: 1.5px solid #ddd;
+            border-radius: 10px;
+            font-size: 14px;
+            outline: none;
+            background: white;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        input:focus, select:focus { border-color: #006747; background: #f9fff9; }
+
+        /* দুই কলাম */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        /* আরো বই বাটন */
+        .btn-add-book {
+            width: 100%;
+            background: white;
+            color: #006747;
+            border: 2.5px dashed #006747;
+            border-radius: 14px;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: 0.2s;
+        }
+        .btn-add-book:hover { background: #f0fdf4; }
+        .plus-circle {
+            width: 28px; height: 28px;
+            background: #006747;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        /* সাবমিট বাটন */
+        .btn-submit {
+            width: 100%;
+            background: #E03C31;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
         }
         .btn-submit:hover { background: #c0342a; transform: translateY(-2px); }
-        #statusModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 1000; }
-        .modal-box { background: white; padding: 30px; border-radius: 20px; text-align: center; width: 85%; max-width: 320px; }
-        .zoom-in { animation: zoom 0.3s ease-out; }
-        @keyframes zoom { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .swipe-up { animation: swipe 0.5s forwards; }
-        @keyframes swipe { to { transform: translateY(-100vh); opacity: 0; } }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 14px;
+            color: #006747;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        /* মোডাল */
+        #statusModal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(6px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-box {
+            background: white;
+            padding: 30px;
+            border-radius: 22px;
+            text-align: center;
+            width: 88%;
+            max-width: 320px;
+            animation: popUp 0.3s ease-out;
+        }
+        @keyframes popUp {
+            from { transform: scale(0.7); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .modal-icon { font-size: 48px; margin-bottom: 10px; }
+        .modal-text { font-size: 16px; font-weight: bold; color: #333; margin-bottom: 18px; }
+        .btn-modal-ok {
+            background: #E03C31;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
-    <div class="sell-card" id="sellBox">
-        <h2>বই বিক্রির ফরম</h2>
-        
-        <div class="user-info">
-            <p id="displayUser">বিক্রেতা: লোড হচ্ছে...</p>
-            <p id="displayPhone">ফোন: লোড হচ্ছে...</p>
-        </div>
+<div class="main-card">
+    <h2>📚 বই বিক্রির ফরম</h2>
 
-        <input type="text" id="bookName" placeholder="বইয়ের নাম লিখুন" required>
-        <input type="text" id="publisher" placeholder="পাবলিকেশন (যেমন: হক, টেকনিক্যাল)" required>
-        
-        <select id="semester" required>
-            <option value="" disabled selected>সেমিস্টার নির্বাচন করুন</option>
-            <option value="১ম">১ম সেমিস্টার</option>
-            <option value="২য়">২য় সেমিস্টার</option>
-            <option value="৩য়">৩য় সেমিস্টার</option>
-            <option value="৪র্থ">৪র্থ সেমিস্টার</option>
-            <option value="৫ম">৫ম সেমিস্টার</option>
-            <option value="৬ষ্ঠ">৬ষ্ঠ সেমিস্টার</option>
-            <option value="৭ম">৭ম সেমিস্টার</option>
-            <option value="৮ম">৮ম সেমিস্টার</option>
-        </select>
-
-        <select id="technology" required>
-            <option value="">টেকনোলজি নির্বাচন করুন</option>
-            <option value="Architecture">Architecture</option>
-            <option value="Automobile">Automobile</option>
-            <option value="Chemical">Chemical</option>
-            <option value="Civil">Civil</option>
-            <option value="Civil (Wood)">Civil (Wood)</option>
-            <option value="Computer">Computer</option>
-            <option value="Electrical">Electrical</option>
-            <option value="Electronics">Electronics</option>
-            <option value="Environmental">Environmental</option>
-            <option value="Food">Food</option>
-            <option value="Mechanical">Mechanical</option>
-            <option value="Power">Power</option>
-            <option value="Refrigeration and Air Conditioning">RAC</option>
-        </select>
-
-        <button class="btn-submit" onclick="submitBook()">বিক্রি নিশ্চিত করুন</button>
-        <br><br>
-        <a href="index.html" style="text-decoration:none; color:#006747; font-size:14px; font-weight:bold;">← ফিরে যান</a>
+    <div class="user-info">
+        <p id="displayUser">বিক্রেতা: লোড হচ্ছে...</p>
+        <p id="displayPhone">ফোন: লোড হচ্ছে...</p>
     </div>
 
-    <div id="statusModal">
-        <div class="modal-box" id="modalBox">
-            <div id="modalIcon" style="font-size: 50px; margin-bottom: 10px;"></div>
-            <div id="modalText" style="font-size: 18px; font-weight: bold; color: #333;"></div>
-            <button id="modalOkBtn" class="btn-submit" style="margin-top: 20px; font-size:15px; padding:10px;" onclick="closeStatusModal()">ঠিক আছে</button>
-        </div>
+    <div id="bookContainer"></div>
+
+    <button class="btn-add-book" onclick="addBookCard()">
+        <span class="plus-circle">+</span>
+        আরো বই যুক্ত করুন
+    </button>
+
+    <button class="btn-submit" onclick="submitAllBooks()">বিক্রি নিশ্চিত করুন</button>
+    <a href="index.html" class="back-link">← ফিরে যান</a>
+</div>
+
+<div id="statusModal">
+    <div class="modal-box">
+        <div class="modal-icon" id="modalIcon"></div>
+        <div class="modal-text" id="modalText"></div>
+        <button class="btn-modal-ok" id="modalOkBtn" onclick="closeModal()">ঠিক আছে</button>
     </div>
+</div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, doc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, doc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // নতুন ডাটাবেজ কনফিগারেশন (Boi Baz v2)
-        const firebaseConfig = {
-          apiKey: "AIzaSyDbtD45rBSZN5RUXCHijFiabZ0uKPYeya0",
-            authDomain: "boi-baz.firebaseapp.com",
-            projectId: "boi-baz",
-            storageBucket: "boi-baz.firebasestorage.app",
-            messagingSenderId: "590447599233",
-            appId: "1:590447599233:web:c969d315d5d4f2b3f87780"
-        };
+    const firebaseConfig = {
+        apiKey: "AIzaSyDbtD45rBSZN5RUXCHijFiabZ0uKPYeya0",
+        authDomain: "boi-baz.firebaseapp.com",
+        projectId: "boi-baz",
+        storageBucket: "boi-baz.firebasestorage.app",
+        messagingSenderId: "590447599233",
+        appId: "1:590447599233:web:c969d315d5d4f2b3f87780"
+    };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const db  = getFirestore(app);
 
-        const userId = localStorage.getItem('userId');
-        let currentUserName = "";
-        let currentUserPhone = "";
+    const userId = localStorage.getItem('userId');
+    let currentUserName = "", currentUserPhone = "";
 
-        if (!userId) { window.location.href = "login.html"; }
+    if (!userId) window.location.href = "login.html";
 
-        // রিয়েল-টাইম প্রোফাইল ডাটা সিঙ্ক
-        onSnapshot(doc(db, "users", userId), (docSnap) => {
-            if (docSnap.exists()) {
-                const data = docSnap.data();
-                currentUserName = data.name;
-                currentUserPhone = data.phone;
-                document.getElementById('displayUser').innerText = `বিক্রেতা: ${data.name}`;
-                document.getElementById('displayPhone').innerText = `ফোন: ${data.phone}`;
-            } else {
-                localStorage.clear();
-                window.location.href = "login.html";
+    onSnapshot(doc(db, "users", userId), (snap) => {
+        if (snap.exists()) {
+            currentUserName  = snap.data().name;
+            currentUserPhone = snap.data().phone;
+            document.getElementById('displayUser').innerText  = `বিক্রেতা: ${currentUserName}`;
+            document.getElementById('displayPhone').innerText = `ফোন: ${currentUserPhone}`;
+        } else {
+            localStorage.clear();
+            window.location.href = "login.html";
+        }
+    });
+
+    // ডেটা অ্যারে
+    const bookNames = [
+        "বাংলা ১", "বাংলা ২",
+        "ইংরেজি ১", "ইংরেজি ২",
+        "গণিত ১", "গণিত ২",
+        "ফিজিক্স ১", "ফিজিক্স ২",
+        "কেমিস্ট্রি ১", "কেমিস্ট্রি ২",
+        "বেসিক ইলেকট্রিসিটি",
+        "বেসিক ইলেকট্রনিক্স",
+        "অন্যান্য বই"
+    ];
+
+    const publishers = [
+        "হক প্রকাশনী",
+        "টেকনিক্যাল প্রকাশনী",
+        "RS প্রকাশনী",
+        "সফটম্যাক্স প্রকাশনী",
+        "অন্যান্য প্রকাশনী"
+    ];
+
+    const semesters     = ["১ম","২য়","৩য়","৪র্থ","৫ম","৬ষ্ঠ","৭ম","৮ম"];
+    const semLabels     = ["১ম সেমিস্টার","২য় সেমিস্টার","৩য় সেমিস্টার","৪র্থ সেমিস্টার","৫ম সেমিস্টার","৬ষ্ঠ সেমিস্টার","৭ম সেমিস্টার","৮ম সেমিস্টার"];
+    const technologies  = ["Architecture","Automobile","Chemical","Civil","Civil (Wood)","Computer","Electrical","Electronics","Environmental","Food","Mechanical","Power","Refrigeration and Air Conditioning"];
+
+    // সন: ২০২৬ থেকে ২০১০
+    const years = [];
+    for (let y = 2026; y >= 2010; y--) years.push(y);
+
+    let bookCount = 0;
+
+    // বইয়ের নাম পরিবর্তন হলে — অন্যান্য হলে ইনপুট দেখাবে
+    window.onBookNameChange = function(index) {
+        const sel       = document.getElementById(`bookName_${index}`);
+        const inputBox  = document.getElementById(`bookNameInput_${index}`);
+        if (sel.value === "অন্যান্য বই") {
+            inputBox.style.display = "block";
+            inputBox.required = true;
+        } else {
+            inputBox.style.display = "none";
+            inputBox.required = false;
+            inputBox.value = "";
+        }
+    };
+
+    // প্রকাশনী পরিবর্তন হলে — অন্যান্য হলে ইনপুট দেখাবে
+    window.onPublisherChange = function(index) {
+        const sel      = document.getElementById(`publisher_${index}`);
+        const inputBox = document.getElementById(`publisherInput_${index}`);
+        if (sel.value === "অন্যান্য প্রকাশনী") {
+            inputBox.style.display = "block";
+            inputBox.required = true;
+        } else {
+            inputBox.style.display = "none";
+            inputBox.required = false;
+            inputBox.value = "";
+        }
+    };
+
+    // বই কার্ড তৈরি
+    window.addBookCard = function() {
+        bookCount++;
+        const i = bookCount;
+        const container = document.getElementById('bookContainer');
+
+        const card = document.createElement('div');
+        card.className = 'book-card';
+        card.id = `bookCard_${i}`;
+
+        card.innerHTML = `
+            <div class="book-card-header">
+                <div class="book-card-title">
+                    📖 <span class="book-number-badge">বই #${i}</span>
+                    ${i === 1 ? '<span class="one-book-badge">এক বক্সে সর্বোচ্চ একটি বই</span>' : ''}
+                </div>
+                ${i > 1 ? `<button class="btn-remove" onclick="removeCard(${i})">✕ সরান</button>` : ''}
+            </div>
+
+            <!-- বইয়ের নাম -->
+            <label class="field-label">বইয়ের নাম</label>
+            <select id="bookName_${i}" onchange="onBookNameChange(${i})">
+                <option value="" disabled selected>বই নির্বাচন করুন</option>
+                ${bookNames.map(b => `<option value="${b}">${b}</option>`).join('')}
+            </select>
+            <!-- অন্যান্য বই হলে ইনপুট -->
+            <input type="text" id="bookNameInput_${i}"
+                placeholder="বইয়ের নাম লিখুন"
+                style="display:none; margin-top:-6px;">
+
+            <!-- প্রকাশনী -->
+            <label class="field-label">প্রকাশনী</label>
+            <select id="publisher_${i}" onchange="onPublisherChange(${i})">
+                <option value="" disabled selected>প্রকাশনী নির্বাচন করুন</option>
+                ${publishers.map(p => `<option value="${p}">${p}</option>`).join('')}
+            </select>
+            <!-- অন্যান্য প্রকাশনী হলে ইনপুট -->
+            <input type="text" id="publisherInput_${i}"
+                placeholder="প্রকাশনীর নাম লিখুন"
+                style="display:none; margin-top:-6px;">
+
+            <!-- সেমিস্টার ও টেকনোলজি -->
+            <div class="two-col">
+                <div>
+                    <label class="field-label">সেমিস্টার</label>
+                    <select id="semester_${i}">
+                        ${semLabels.map((l,idx) => `<option value="${semesters[idx]}">${l}</option>`).join('')}
+                    </select>
+                </div>
+                <div>
+                    <label class="field-label">টেকনোলজি</label>
+                    <select id="technology_${i}">
+                        ${technologies.map(t => `<option value="${t}">${t}</option>`).join('')}
+                    </select>
+                </div>
+            </div>
+
+            <!-- প্রকাশের সন -->
+            <label class="field-note">যে বছর বইটি প্রকাশিত হয়েছে সে বছর নির্বাচন করুন।</label>
+            <label class="field-label">বই প্রকাশের সন</label>
+            <select id="year_${i}">
+                <option value="" disabled selected>সন নির্বাচন করুন</option>
+                ${years.map(y => `<option value="${y}">${y}</option>`).join('')}
+            </select>
+
+            <!-- মূল্য -->
+            <label class="field-note">⚠️ বইয়ে উল্লেখিত মূল্যের সর্বোচ্চ অর্ধেক মূল্য দেওয়া যাবে।</label>
+            <label class="field-label">বিক্রয় মূল্য (টাকা)</label>
+            <input type="text"
+                id="price_${i}"
+                placeholder="টাকা লিখুন"
+                inputmode="numeric">
+        `;
+
+        container.appendChild(card);
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+
+    // কার্ড সরানো
+    window.removeCard = function(index) {
+        const card = document.getElementById(`bookCard_${index}`);
+        if (card) card.remove();
+    };
+
+    // বাংলা সংখ্যা → ইংরেজি রূপান্তর
+    function toEnglishNumber(str) {
+        return str
+            .replace(/০/g,'0').replace(/১/g,'1').replace(/২/g,'2')
+            .replace(/৩/g,'3').replace(/৪/g,'4').replace(/৫/g,'5')
+            .replace(/৬/g,'6').replace(/৭/g,'7').replace(/৮/g,'8')
+            .replace(/৯/g,'9');
+    }
+
+    // সব বই সাবমিট
+    window.submitAllBooks = async function() {
+        const cards = document.querySelectorAll('.book-card');
+
+        if (cards.length === 0) {
+            showModal("⚠️", "কমপক্ষে একটি বই যুক্ত করুন।", true);
+            return;
+        }
+
+        const booksData = [];
+
+        for (const card of cards) {
+            const i = card.id.split('_')[1];
+
+            // বইয়ের নাম
+            const bookNameSel = document.getElementById(`bookName_${i}`);
+            let bookName = bookNameSel.value;
+            if (!bookName) {
+                showModal("⚠️", `বই #${i} — বইয়ের নাম নির্বাচন করুন।`, true);
+                return;
             }
-        });
+            if (bookName === "অন্যান্য বই") {
+                bookName = document.getElementById(`bookNameInput_${i}`).value.trim();
+                if (!bookName) {
+                    showModal("⚠️", `বই #${i} — বইয়ের নাম লিখুন।`, true);
+                    return;
+                }
+            }
 
-        window.submitBook = async () => {
-            const bookName = document.getElementById('bookName').value.trim();
-            const publisher = document.getElementById('publisher').value.trim();
-            const semester = document.getElementById('semester').value;
-            const technology = document.getElementById('technology').value;
+            // প্রকাশনী
+            const pubSel = document.getElementById(`publisher_${i}`);
+            let publisher = pubSel.value;
+            if (!publisher) {
+                showModal("⚠️", `বই #${i} — প্রকাশনী নির্বাচন করুন।`, true);
+                return;
+            }
+            if (publisher === "অন্যান্য প্রকাশনী") {
+                publisher = document.getElementById(`publisherInput_${i}`).value.trim();
+                if (!publisher) {
+                    showModal("⚠️", `বই #${i} — প্রকাশনীর নাম লিখুন।`, true);
+                    return;
+                }
+            }
 
-            if (!bookName || !publisher || !semester || !technology) {
-                showStatus("⚠️", "সবগুলো ঘর সঠিকভাবে পূরণ করুন।", true);
+            const semester   = document.getElementById(`semester_${i}`).value;
+            const technology = document.getElementById(`technology_${i}`).value;
+            const year       = document.getElementById(`year_${i}`).value;
+
+            // মূল্য — বাংলা → ইংরেজি রূপান্তর
+            const priceRaw = toEnglishNumber(
+                document.getElementById(`price_${i}`).value.trim()
+            );
+            const price = parseInt(priceRaw);
+
+            if (!year) {
+                showModal("⚠️", `বই #${i} — প্রকাশের সন নির্বাচন করুন।`, true);
+                return;
+            }
+            if (!priceRaw || isNaN(price) || price <= 0) {
+                showModal("⚠️", `বই #${i} — সঠিক মূল্য লিখুন।`, true);
                 return;
             }
 
-            showStatus("⏳", "তথ্য জমা হচ্ছে...", false);
-
-            try {
-                await addDoc(collection(db, "books"), {
-                    userId: userId,
-                    sellerName: currentUserName,
-                    phone: currentUserPhone,
-                    bookName: bookName,
-                    publisher: publisher,
-                    semester: semester,
-                    technology: technology,
-                    time: serverTimestamp() // এখানে serverTimestamp ব্যবহার করা ভালো
-                });
-
-                showStatus("✅", "বই বিক্রির আবেদন সফল হয়েছে!", false);
-                setTimeout(() => {
-                    document.getElementById('sellBox').classList.add('swipe-up');
-                    setTimeout(() => { window.location.href = "index.html"; }, 500);
-                }, 1500);
-
-            } catch (error) {
-                console.error("Error adding book: ", error);
-                showStatus("❌", "সার্ভারে সমস্যা হয়েছে!", true);
-            }
-        };
-
-        function showStatus(icon, msg, btnShow) {
-            document.getElementById('modalIcon').innerText = icon;
-            document.getElementById('modalText').innerText = msg;
-            document.getElementById('modalOkBtn').style.display = btnShow ? "inline-block" : "none";
-            document.getElementById('statusModal').style.display = 'flex';
-            document.getElementById('modalBox').className = "modal-box zoom-in";
+            booksData.push({ bookName, publisher, semester, technology, year, price });
         }
 
-        window.closeStatusModal = () => { document.getElementById('statusModal').style.display = 'none'; }
-    </script>
-</body>
+        showModal("⏳", `${booksData.length}টি বই জমা হচ্ছে...`, false);
 
+        try {
+            for (const book of booksData) {
+                await addDoc(collection(db, "books"), {
+                    userId:      userId,
+                    sellerName:  currentUserName,
+                    phone:       currentUserPhone,
+                    bookName:    book.bookName,
+                    publisher:   book.publisher,
+                    semester:    book.semester,
+                    technology:  book.technology,
+                    publishYear: book.year,
+                    price:       book.price,        // ইংরেজি number হিসেবে সেভ
+                    time:        serverTimestamp()
+                });
+            }
+
+            showModal("✅", `${booksData.length}টি বই সফলভাবে যুক্ত হয়েছে!`, false);
+            setTimeout(() => { window.location.href = "index.html"; }, 1800);
+
+        } catch (err) {
+            console.error(err);
+            showModal("❌", "সার্ভারে সমস্যা হয়েছে!", true);
+        }
+    };
+
+    function showModal(icon, text, showBtn) {
+        document.getElementById('modalIcon').innerText = icon;
+        document.getElementById('modalText').innerText = text;
+        document.getElementById('modalOkBtn').style.display = showBtn ? 'inline-block' : 'none';
+        document.getElementById('statusModal').style.display = 'flex';
+    }
+
+    window.closeModal = () => {
+        document.getElementById('statusModal').style.display = 'none';
+    };
+
+    // প্রথম কার্ড স্বয়ংক্রিয়ভাবে
+    addBookCard();
+</script>
+
+</body>
 </html>
+
+
