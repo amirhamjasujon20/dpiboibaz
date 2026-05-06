@@ -10,40 +10,71 @@
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:'Arial',sans-serif;min-height:100vh;background:linear-gradient(135deg,#f0fff8 0%,#fff5f5 50%,#f0fff8 100%);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:24px}
+        
         .logo-section{text-align:center;margin-bottom:24px}
         .logo-section img{width:80px;height:80px;border-radius:20px;margin-bottom:10px;box-shadow:0 4px 15px rgba(0,103,71,0.2)}
         .logo-section h1{font-size:26px;color:#006747;font-weight:bold;margin-bottom:4px}
         .logo-section p{font-size:13px;color:#888}
+        
         .card{background:white;border-radius:24px;padding:28px 24px;width:100%;max-width:400px;box-shadow:0 10px 40px rgba(0,0,0,0.1)}
+        
         .btn-google{width:100%;padding:14px;background:#006747;color:white;border:none;border-radius:14px;font-size:15px;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:8px;transition:0.2s}
         .btn-google:hover{background:#004d35;transform:translateY(-1px)}
         .gmail-note{text-align:center;font-size:12px;color:#888;margin-bottom:20px}
+        
         .divider{display:flex;align-items:center;gap:12px;margin-bottom:20px}
         .divider-line{flex:1;height:1px;background:#eee}
         .divider span{font-size:12px;color:#aaa;white-space:nowrap}
-        .phone-wrapper{position:relative;margin-bottom:18px}
-        .phone-wrapper > label{position:absolute;top:0;left:14px;transform:translateY(-50%);font-size:11px;color:#006747;font-weight:bold;background:white;padding:0 4px;pointer-events:none;z-index:1}
-        .phone-inner{display:flex;border:1.5px solid #ddd;border-radius:12px;overflow:hidden;transition:0.2s}
-        .phone-inner:focus-within{border-color:#006747}
-        .phone-prefix{background:#006747;color:white;font-weight:bold;font-size:14px;padding:15px 14px;white-space:nowrap;flex-shrink:0}
-        .phone-inner input{flex:1;border:none;padding:15px 12px;font-size:15px;outline:none;background:transparent}
-        .phone-error{font-size:11px;color:#E03C31;margin-top:4px;display:none;padding-left:4px}
-        .phone-inner.error-border{border-color:#E03C31}
+
+        /* নতুন ফোন ইনপুট স্টাইল */
+        .phone-container {display: flex; gap: 10px; margin-bottom: 18px; position: relative;}
+        
+        .prefix-box {
+            width: 70px; height: 52px; background: #006747; color: white; 
+            display: flex; align-items: center; justify-content: center; 
+            font-weight: bold; border-radius: 12px; font-size: 15px;
+        }
+
+        .phone-input-group { position: relative; flex: 1; }
+        .phone-input-group input {
+            width: 100%; padding: 15px 14px; border: 1.5px solid #ddd; 
+            border-radius: 12px; font-size: 15px; outline: none; transition: 0.2s;
+        }
+        .phone-input-group label {
+            position: absolute; top: 50%; left: 14px; transform: translateY(-50%);
+            font-size: 14px; color: #aaa; pointer-events: none; transition: all 0.2s ease;
+            background: white; padding: 0 4px;
+        }
+        .phone-input-group input:focus ~ label,
+        .phone-input-group input:not(:placeholder-shown) ~ label {
+            top: 0; font-size: 11px; color: #006747; font-weight: bold;
+        }
+        .phone-input-group input:focus { border-color: #006747; }
+        .phone-input-group input.error-border { border-color: #E03C31; }
+
+        .phone-error { font-size: 11px; color: #E03C31; position: absolute; bottom: -16px; left: 80px; display: none; }
+
+        /* পাসওয়ার্ড ইনপুট স্টাইল */
         .input-group{position:relative;margin-bottom:18px}
         .input-group label{position:absolute;top:50%;left:14px;transform:translateY(-50%);font-size:14px;color:#aaa;pointer-events:none;transition:all 0.2s ease;background:white;padding:0 4px}
         .input-group input:focus ~ label,.input-group input:not(:placeholder-shown) ~ label{top:0;font-size:11px;color:#006747;font-weight:bold}
         .input-group input{width:100%;padding:15px 44px 15px 14px;border:1.5px solid #ddd;border-radius:12px;font-size:15px;outline:none;transition:0.2s;background:transparent}
         .input-group input:focus{border-color:#006747}
+        
         .eye-btn{position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;color:#aaa;font-size:16px;background:none;border:none;padding:4px}
-        .eye-btn:hover{color:#006747}
+        
         .spinner{display:none;text-align:center;margin:10px 0}
         .spinner i{color:#006747;font-size:22px;animation:spin 1s linear infinite}
         @keyframes spin{to{transform:rotate(360deg)}}
+        
         .btn-login{width:100%;padding:15px;background:#006747;color:white;border:none;border-radius:14px;font-size:17px;font-weight:bold;cursor:pointer;margin-bottom:16px;transition:0.2s}
         .btn-login:hover{background:#004d35;transform:translateY(-1px)}
+        
         .forgot-link{display:block;text-align:center;color:#E03C31;font-weight:bold;font-size:14px;text-decoration:none;margin-bottom:14px;padding:6px}
         .signup-row{text-align:center;font-size:14px;color:#666}
         .signup-row a{color:#E03C31;font-weight:bold;text-decoration:none}
+
+        /* Modal Styles */
         .modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);backdrop-filter:blur(5px);justify-content:center;align-items:center;z-index:1000}
         .modal-box{background:white;padding:30px 24px;border-radius:22px;text-align:center;width:88%;max-width:320px;box-shadow:0 10px 30px rgba(0,0,0,0.2);animation:popUp 0.3s ease-out}
         @keyframes popUp{from{transform:scale(0.7);opacity:0}to{transform:scale(1);opacity:1}}
@@ -63,12 +94,11 @@
 </div>
 
 <div class="card">
-
     <button class="btn-google" id="btnGoogleLogin">
         <i class="fa-solid fa-envelope"></i>
         Gmail দিয়ে লগইন করুন
     </button>
-    <p class="gmail-note">(পাসওয়ার্ড ছাড়া)</p>
+    <p class="gmail-note">পাসওয়ার্ড ছাড়া লগইন করুন</p>
 
     <div class="divider">
         <div class="divider-line"></div>
@@ -76,17 +106,15 @@
         <div class="divider-line"></div>
     </div>
 
-    <!-- ফোন — +880 সবসময় দেখা যাবে, floating label উপরে fixed -->
-    <div class="phone-wrapper">
-        <label>ফোন নাম্বার</label>
-        <div class="phone-inner" id="phoneInner">
-            <span class="phone-prefix">+880</span>
+    <div class="phone-container">
+        <div class="prefix-box">+880</div>
+        <div class="phone-input-group">
             <input type="tel" id="phone" placeholder=" " maxlength="10" oninput="validatePhone(this)">
+            <label>নাম্বার লিখুন</label>
         </div>
         <div class="phone-error" id="phoneError">সঠিক নম্বর দিন</div>
     </div>
 
-    <!-- পাসওয়ার্ড — floating label -->
     <div class="input-group">
         <input type="password" id="pass" placeholder=" " maxlength="6">
         <label>পাসওয়ার্ড (৬ ডিজিট)</label>
@@ -100,14 +128,13 @@
     <button class="btn-login" id="btnLogin" onclick="handleLogin()">লগইন</button>
     <a href="fpass.html" class="forgot-link">পাসওয়ার্ড ভুলে গেছেন?</a>
     <div class="signup-row">অ্যাকাউন্ট নেই? <a href="signup.html">নতুন তৈরি করুন</a></div>
-
 </div>
 
 <div class="modal-overlay" id="modal">
     <div class="modal-box">
-        <div class="modal-icon"  id="modalIcon"></div>
+        <div class="modal-icon" id="modalIcon"></div>
         <div class="modal-title" id="modalTitle"></div>
-        <div class="modal-msg"   id="modalMsg"></div>
+        <div class="modal-msg" id="modalMsg"></div>
         <div id="modalBtns"></div>
     </div>
 </div>
@@ -136,18 +163,20 @@
     const app = initializeApp(firebaseConfig);
     const db  = getFirestore(app);
 
+    // ফোন নাম্বার ভ্যালিডেশন ফাংশন
     window.validatePhone = function(input) {
-        const val   = input.value;
-        const inner = document.getElementById('phoneInner');
-        const err   = document.getElementById('phoneError');
+        const val = input.value;
+        const err = document.getElementById('phoneError');
         let isValid = true;
+        
         if (val.length >= 1 && val[0] !== '1') isValid = false;
         if (val.length >= 2 && !'3456789'.includes(val[1])) isValid = false;
+        
         if (!isValid && val.length > 0) {
-            inner.classList.add('error-border');
+            input.classList.add('error-border');
             err.style.display = 'block';
         } else {
-            inner.classList.remove('error-border');
+            input.classList.remove('error-border');
             err.style.display = 'none';
         }
     };
@@ -165,12 +194,12 @@
 
     window.handleCredentialResponse = async (response) => {
         const payload = JSON.parse(atob(response.credential.split('.')[1]));
-        const email   = payload.email;
+        const email = payload.email;
         showLoading(true);
         const snap = await getDocs(query(collection(db,"users"), where("email","==",email)));
         showLoading(false);
         if (!snap.empty) {
-            const doc  = snap.docs[0];
+            const doc = snap.docs[0];
             const name = doc.data().name;
             showModal("😊","অ্যাকাউন্ট পাওয়া গেছে!",`'${name}' নামে অ্যাকাউন্ট আছে। লগইন করতে চান?`,[
                 {text:"হ্যাঁ, লগইন করি", cls:"", click:()=>{ localStorage.setItem('userId',doc.id); localStorage.setItem('userName',name); window.location.href="index.html"; }},
@@ -182,13 +211,17 @@
     };
 
     window.handleLogin = async function() {
-        const phone = document.getElementById('phone').value.trim();
-        const pass  = document.getElementById('pass').value.trim();
+        const phoneInput = document.getElementById('phone');
+        const phone = phoneInput.value.trim();
+        const pass = document.getElementById('pass').value.trim();
+        
         if (!phone || !pass) { showModal("⚠️","ভুল!","সব ঘর পূরণ করুন।",[{text:"ঠিক আছে",cls:"",click:closeModal}]); return; }
         if (pass.length !== 6) { showModal("🚫","পাসওয়ার্ড","পাসওয়ার্ড ঠিক ৬ ডিজিট হতে হবে।",[{text:"ঠিক আছে",cls:"",click:closeModal}]); return; }
+        
         showLoading(true);
         const snap = await getDocs(query(collection(db,"users"), where("phone","==","+880"+phone)));
         showLoading(false);
+        
         if (!snap.empty && snap.docs[0].data().pass === pass) {
             localStorage.setItem('userId', snap.docs[0].id);
             localStorage.setItem('userName', snap.docs[0].data().name);
@@ -199,22 +232,22 @@
     };
 
     function showLoading(show) {
-        document.getElementById('spinner').style.display   = show ? 'block' : 'none';
-        document.getElementById('btnLogin').disabled       = show;
+        document.getElementById('spinner').style.display = show ? 'block' : 'none';
+        document.getElementById('btnLogin').disabled = show;
         document.getElementById('btnGoogleLogin').disabled = show;
     }
 
     window.showModal = function(icon, title, msg, buttons) {
-        document.getElementById('modalIcon').innerText  = icon;
+        document.getElementById('modalIcon').innerText = icon;
         document.getElementById('modalTitle').innerText = title;
-        document.getElementById('modalMsg').innerText   = msg;
+        document.getElementById('modalMsg').innerText = msg;
         const area = document.getElementById('modalBtns');
         area.innerHTML = "";
         buttons.forEach(b => {
             const btn = document.createElement('button');
-            btn.innerText   = b.text;
-            btn.className   = 'modal-btn ' + (b.cls || '');
-            btn.onclick     = b.click;
+            btn.innerText = b.text;
+            btn.className = 'modal-btn ' + (b.cls || '');
+            btn.onclick = b.click;
             area.appendChild(btn);
         });
         document.getElementById('modal').style.display = 'flex';
