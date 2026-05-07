@@ -14,16 +14,25 @@
         select:focus { border-color: #006747; background: white; }
         .btn-search { width: 100%; background: #006747; color: white; border: none; padding: 12px; border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: 0.3s; }
         .btn-search:hover { background: #004d35; transform: translateY(-2px); }
+        
         .results-area { width: 100%; max-width: 600px; }
         .seller-group-card { background: white; border-radius: 15px; padding: 15px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); border-left: 6px solid #006747; }
         .seller-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px; }
         .seller-name { font-weight: bold; color: #333; font-size: 16px; }
-        .contact-btn { background: #28a745; color: white; text-decoration: none; padding: 6px 15px; border-radius: 20px; font-size: 14px; font-weight: bold; }
-        .book-item { display: flex; align-items: center; background: #fdfdfd; padding: 10px; border-radius: 10px; margin-top: 8px; border: 1px dashed #ccc; }
-        .book-icon { font-size: 20px; margin-right: 12px; }
-        .book-info h4 { margin: 0; font-size: 15px; color: #006747; }
-        .book-info p { margin: 2px 0 0; font-size: 13px; color: #666; }
-        .home-btn { position: fixed; bottom: 30px; left: 30px; width: 50px; height: 50px; background: #006747; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; text-decoration: none; font-size: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .contact-btn { background: #28a745; color: white; text-decoration: none; padding: 8px 18px; border-radius: 20px; font-size: 14px; font-weight: bold; transition: 0.3s; }
+        .contact-btn:hover { background: #218838; }
+
+        /* বুক আইটেম আপডেট */
+        .book-item { display: flex; align-items: flex-start; background: #fdfdfd; padding: 12px; border-radius: 10px; margin-top: 10px; border: 1px solid #eee; transition: 0.2s; }
+        .book-item:hover { border-color: #006747; }
+        .book-icon { font-size: 24px; margin-right: 15px; margin-top: 5px; }
+        .book-info { flex-grow: 1; }
+        .book-info h4 { margin: 0; font-size: 16px; color: #006747; margin-bottom: 4px; }
+        .book-meta { display: flex; flex-wrap: wrap; gap: 10px; font-size: 13px; color: #666; }
+        .price-tag { color: #e03c31; font-weight: bold; font-size: 14px; }
+        .year-tag { background: #e8f5e9; color: #2e7d32; padding: 2px 8px; border-radius: 5px; font-size: 12px; }
+        
+        .home-btn { position: fixed; bottom: 30px; left: 30px; width: 50px; height: 50px; background: #006747; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; text-decoration: none; font-size: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 100; }
     </style>
 </head>
 <body>
@@ -93,7 +102,6 @@
         resultArea.innerHTML = "<p style='text-align:center;'>খোঁজা হচ্ছে...</p>";
 
         try {
-            // আমি এখানে technology ফিল্ড দিয়েও চেক করছি
             const q = query(
                 collection(db, "books"), 
                 where("technology", "==", tech), 
@@ -102,7 +110,6 @@
             
             let querySnapshot = await getDocs(q);
 
-            // যদি technology ফিল্ডে না পায়, তবে department ফিল্ডে খুঁজবে
             if (querySnapshot.empty) {
                 const qAlt = query(
                     collection(db, "books"), 
@@ -115,7 +122,7 @@
             resultArea.innerHTML = "";
 
             if (querySnapshot.empty) {
-                resultArea.innerHTML = "<p style='text-align:center; color:#555;'>দুঃখিত, কোনো বই পাওয়া যায়নি।</p>";
+                resultArea.innerHTML = "<p style='text-align:center; color:#555;'>দুঃখিত, কোনো বই পাওয়া যায়নি।</p>";
                 return;
             }
 
@@ -132,10 +139,37 @@
             for (const phone in groups) {
                 const group = groups[phone];
                 let bookItemsHtml = "";
+                
                 group.books.forEach(book => {
-                    bookItemsHtml += `<div class="book-item"><div class="book-icon">📚</div><div class="book-info"><h4>${book.bookName}</h4><p>প্রকাশনী: ${book.publisher}</p></div></div>`;
+                    // তথ্য না থাকলে ডিফল্ট টেক্সট দেখাবে
+                    const bPrice = book.price ? `${book.price} ৳` : "আলোচনা সাপেক্ষ";
+                    const bYear = book.publishYear ? `প্রকাশ: ${book.publishYear}` : "সাল অজানা";
+                    const bPublisher = book.publisher || "অন্যান্য";
+
+                    bookItemsHtml += `
+                        <div class="book-item">
+                            <div class="book-icon">📚</div>
+                            <div class="book-info">
+                                <h4>${book.bookName}</h4>
+                                <div class="book-meta">
+                                    <span>প্রকাশনী: ${bPublisher}</span>
+                                    <span class="year-tag">${bYear}</span>
+                                </div>
+                                <div style="margin-top:5px;">
+                                    <span class="price-tag">মূল্য: ${bPrice}</span>
+                                </div>
+                            </div>
+                        </div>`;
                 });
-                resultArea.innerHTML += `<div class="seller-group-card"><div class="seller-header"><span class="seller-name">👤 ${group.sellerName}</span><a href="tel:${phone}" class="contact-btn">কল করুন</a></div><div class="books-list">${bookItemsHtml}</div></div>`;
+
+                resultArea.innerHTML += `
+                    <div class="seller-group-card">
+                        <div class="seller-header">
+                            <span class="seller-name">👤 ${group.sellerName}</span>
+                            <a href="tel:${phone}" class="contact-btn">কল করুন</a>
+                        </div>
+                        <div class="books-list">${bookItemsHtml}</div>
+                    </div>`;
             }
         } catch (error) {
             console.error(error);
@@ -144,5 +178,4 @@
     }
 </script>
 </body>
-
 </html>
